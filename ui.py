@@ -1,5 +1,4 @@
 import time
-import math
 
 from tkinter import *
 from tkinter import filedialog
@@ -103,6 +102,13 @@ canvas.create_text(85, 50, text='외기 온도 :', font=('', 10), anchor='e')
 canvas.create_text(85, 70, text='공급 온도 :', font=('', 10), anchor='e')
 canvas.create_text(85, 90, text='환수 온도 :', font=('', 10), anchor='e')
 canvas.create_text(5, 110, text='건물 냉방 부하 :', font=('', 10), anchor='w')
+
+image = Image.open("green_to_red.png").resize((20, 95))
+image = ImageTk.PhotoImage(image)
+canvas.create_text(820, 20, anchor='w', text='환수 온도 색상 변화', font=("", 7))
+canvas.create_image(870, 30, anchor='nw',image=image)
+canvas.create_text(840, 35, anchor='w', text='17.0도', font=("", 7))
+canvas.create_text(840, 118, anchor='w', text='12.0도', font=("", 7))
 
 def select_file():
     filetypes = (
