@@ -60,13 +60,13 @@ canvas.create_rectangle(30, 340, 190, 460, fill='#0099ff')
 canvas.create_text(115, 400, text="냉동기", font=('', 20))
 
 canvas.create_text(110, 260, text='터보식', font=('', 10))
-turbor1 = canvas.create_rectangle(35, 290, 65, 320, fill='#AEAEAE')
+turbor1 = canvas.create_rectangle(35, 290, 65, 320, fill='#AEAEAE')#475
 canvas.create_text(50, 305, text='1', font=('', 10))
-turbor2 = canvas.create_rectangle(75, 290, 105, 320, fill='#AEAEAE')
+turbor2 = canvas.create_rectangle(75, 290, 105, 320, fill='#AEAEAE')#475
 canvas.create_text(90, 305, text='2', font=('', 10))
-turbor3 = canvas.create_rectangle(115, 290, 145, 320, fill='#AEAEAE')
+turbor3 = canvas.create_rectangle(115, 290, 145, 320, fill='#AEAEAE')#180
 canvas.create_text(130, 305, text='3', font=('', 10))
-turbor4 = canvas.create_rectangle(155, 290, 185, 320, fill='#AEAEAE')
+turbor4 = canvas.create_rectangle(155, 290, 185, 320, fill='#AEAEAE')#180
 canvas.create_text(170, 305, text='4', font=('', 10))
 
 canvas.create_rectangle(45, 320, 55, 340, fill='#AEAEAE')
@@ -75,13 +75,13 @@ canvas.create_rectangle(125, 320, 135, 340, fill='#AEAEAE')
 canvas.create_rectangle(165, 320, 175, 340, fill='#AEAEAE')
 
 canvas.create_text(110, 540, text='흡수식', font=('', 10))
-absortion1 = canvas.create_rectangle(35, 510, 65, 480, fill='gray')
+absortion1 = canvas.create_rectangle(35, 510, 65, 480, fill='gray')#600
 canvas.create_text(50, 495, text='1', font=('', 10))
-absortion2 = canvas.create_rectangle(75, 510, 105, 480, fill='gray')
+absortion2 = canvas.create_rectangle(75, 510, 105, 480, fill='gray')#600
 canvas.create_text(90, 495, text='2', font=('', 10))
-absortion3 = canvas.create_rectangle(115, 510, 145, 480, fill='gray')
+absortion3 = canvas.create_rectangle(115, 510, 145, 480, fill='gray')#600
 canvas.create_text(130, 495, text='3', font=('', 10))
-absortion4 = canvas.create_rectangle(155, 510, 185, 480, fill='gray')
+absortion4 = canvas.create_rectangle(155, 510, 185, 480, fill='gray')#600
 canvas.create_text(170, 495, text='4', font=('', 10))
 
 canvas.create_rectangle(45, 480, 55, 460, fill='gray')
@@ -119,12 +119,71 @@ def select_file():
         try:
             lines = f.readlines()
             for line in lines:
+                line = line.split(',')
+                total_rt = line[0]
+                refs = list(map(int, eval(line[1])))
+                entrophy = line[2]
+                return_degree = line[3]
+                date = line[4]
+
+                if refs.count(475) == 1:
+                    canvas.itemconfig(turbor1, fill='#19EB35')
+                    canvas.itemconfig(turbor2, fill='#AEAEAE')
+                elif refs.count(475) == 2:
+                    canvas.itemconfig(turbor1, fill='#19EB35')
+                    canvas.itemconfig(turbor2, fill='#19EB35')   
+                elif refs.count(475) == 0:
+                    canvas.itemconfig(turbor1, fill='#AEAEAE')
+                    canvas.itemconfig(turbor2, fill='#AEAEAE')     
+
+                if refs.count(180) == 1:
+                    canvas.itemconfig(turbor3, fill='#19EB35')
+                    canvas.itemconfig(turbor4, fill='#AEAEAE')
+                elif refs.count(180) == 2:
+                    canvas.itemconfig(turbor3, fill='#19EB35')
+                    canvas.itemconfig(turbor4, fill='#19EB35')   
+                elif refs.count(180) == 0:
+                    canvas.itemconfig(turbor3, fill='#AEAEAE')
+                    canvas.itemconfig(turbor4, fill='#AEAEAE') 
+
+                if refs.count(600) == 0:
+                    canvas.itemconfig(absortion1, fill='gray')
+                    canvas.itemconfig(absortion2, fill='gray') 
+                    canvas.itemconfig(absortion3, fill='gray')
+                    canvas.itemconfig(absortion4, fill='gray') 
+                
+                elif refs.count(600) == 1:
+                    canvas.itemconfig(absortion1, fill='#19EB35')
+                    canvas.itemconfig(absortion2, fill='gray') 
+                    canvas.itemconfig(absortion3, fill='gray')
+                    canvas.itemconfig(absortion4, fill='gray') 
+                
+                elif refs.count(600) == 2:
+                    canvas.itemconfig(absortion1, fill='#19EB35')
+                    canvas.itemconfig(absortion2, fill='#19EB35') 
+                    canvas.itemconfig(absortion3, fill='gray')
+                    canvas.itemconfig(absortion4, fill='gray') 
+                
+                elif refs.count(600) == 3:
+                    canvas.itemconfig(absortion1, fill='#19EB35')
+                    canvas.itemconfig(absortion2, fill='#19EB35') 
+                    canvas.itemconfig(absortion3, fill='#19EB35')
+                    canvas.itemconfig(absortion4, fill='gray') 
+                
+                elif refs.count(600) == 4:
+                    canvas.itemconfig(absortion1, fill='#19EB35')
+                    canvas.itemconfig(absortion2, fill='#19EB35') 
+                    canvas.itemconfig(absortion3, fill='#19EB35')
+                    canvas.itemconfig(absortion4, fill='#19EB35') 
+
+                root.update()
+
                 color = 'orange'
-                date_time = canvas.create_text(90, 30, text='2022/03/01 17:00', font=('', 10), anchor='w')
-                degree = canvas.create_text(90, 50, text='33.1도', font=('', 10), anchor='w')
-                supply_degree = canvas.create_text(90, 70, text='7.1도', font=('', 10), anchor='w')
-                return_degree = canvas.create_text(90, 90, text='12.3도', font=('', 10), anchor='w')
-                rt = canvas.create_text(105, 110, text='33000RT', font=('', 10), anchor='w')
+                date_time = canvas.create_text(90, 30, text=date, font=('', 10), anchor='w')
+                degree = canvas.create_text(90, 50, text=entrophy, font=('', 10), anchor='w')
+                supply_degree = canvas.create_text(90, 70, text='7.0도', font=('', 10), anchor='w')
+                return_degree = canvas.create_text(90, 90, text=return_degree+'도', font=('', 10), anchor='w')
+                rt = canvas.create_text(105, 110, text=total_rt, font=('', 10), anchor='w')
 
                 supply_coord = [190, 420, 190, 460]
                 return_coord = [190, 380, 190, 340]
@@ -155,7 +214,6 @@ def select_file():
                     canvas.coords(supply_4, sub_supply_coord)
                     root.update()
                     time.sleep(0.01)
-
 
                 time.sleep(0.5)
                 return_1 = canvas.create_polygon(return_coord, fill=color)
