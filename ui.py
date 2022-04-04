@@ -20,6 +20,7 @@ rdpy = h-20
 root = Tk()
 root.title("Energy ui")
 root.resizable(False, False)
+root.iconbitmap('inu.ico')
 root.geometry('1000x950')
 
 
@@ -112,7 +113,8 @@ canvas.create_text(840, 118, anchor='w', text='12.0도', font=("", 7))
 
 def select_file():
     filetypes = (
-        ('text files', '*.txt'),
+        ('csv files', '*.csv'),
+        ('excel files', '*.xlsx'),
         ('All files', '*.*')
     )
 
