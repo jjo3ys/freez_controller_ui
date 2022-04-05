@@ -204,7 +204,7 @@ def select_file():
             degree = canvas.create_text(90, 50, text=entrophy, font=('', 10), anchor='w')
             supply_degree = canvas.create_text(90, 70, text='7.0도', font=('', 10), anchor='w')
             return_degree = canvas.create_text(90, 90, text=str(return_degree)+'도', font=('', 10), anchor='w')
-            rt = canvas.create_text(105, 110, text=total_rt, font=('', 10), anchor='w')
+            rt = canvas.create_text(105, 110, text=total_rt+'rt', font=('', 10), anchor='w')
 
             supply_coord = [190, 420, 190, 460]
             return_coord = [190, 380, 190, 340]
