@@ -1,4 +1,5 @@
 import time
+import csv
 
 from tkinter import *
 from tkinter import filedialog
@@ -124,139 +125,151 @@ def select_file():
         filetypes=filetypes)
 
     with open(filename, 'r', encoding='utf-8') as f:
-        try:
-            lines = f.readlines()
-            for line in lines:
-                line = line.split(',')
-                total_rt = line[0]
-                refs = list(map(int, eval(line[1])))
-                entrophy = line[2]
-                return_degree = line[3]
-                date = line[4]
+        # try:
+        rdr = csv.reader(f)
+        rdr = list(rdr)
+        # lines = f.readlines()
+        for line in rdr:
+            print(line[1])
+            
+            total_rt = str(line[0])
+            refs = list(map(int, eval(line[1])))
+            entrophy = str(line[2])
+            return_degree = float(line[3])
+            date = str(line[4])
+            color = 'orange'
+            if return_degree >=7 and return_degree <=12:
+                color = "#00FF11"
+            
+            elif return_degree >12 and return_degree <=15:
+                color = "yellow"
+            
+            elif return_degree > 15:
+                color = "red"
 
-                if refs.count(475) == 1:
-                    canvas.itemconfig(turbor1, fill='#19EB35')
-                    canvas.itemconfig(turbor2, fill='#AEAEAE')
-                elif refs.count(475) == 2:
-                    canvas.itemconfig(turbor1, fill='#19EB35')
-                    canvas.itemconfig(turbor2, fill='#19EB35')   
-                elif refs.count(475) == 0:
-                    canvas.itemconfig(turbor1, fill='#AEAEAE')
-                    canvas.itemconfig(turbor2, fill='#AEAEAE')     
+            if refs.count(475) == 1:
+                canvas.itemconfig(turbor1, fill='#19EB35')
+                canvas.itemconfig(turbor2, fill='#AEAEAE')
+            elif refs.count(475) == 2:
+                canvas.itemconfig(turbor1, fill='#19EB35')
+                canvas.itemconfig(turbor2, fill='#19EB35')   
+            elif refs.count(475) == 0:
+                canvas.itemconfig(turbor1, fill='#AEAEAE')
+                canvas.itemconfig(turbor2, fill='#AEAEAE')     
 
-                if refs.count(180) == 1:
-                    canvas.itemconfig(turbor3, fill='#19EB35')
-                    canvas.itemconfig(turbor4, fill='#AEAEAE')
-                elif refs.count(180) == 2:
-                    canvas.itemconfig(turbor3, fill='#19EB35')
-                    canvas.itemconfig(turbor4, fill='#19EB35')   
-                elif refs.count(180) == 0:
-                    canvas.itemconfig(turbor3, fill='#AEAEAE')
-                    canvas.itemconfig(turbor4, fill='#AEAEAE') 
+            if refs.count(180) == 1:
+                canvas.itemconfig(turbor3, fill='#19EB35')
+                canvas.itemconfig(turbor4, fill='#AEAEAE')
+            elif refs.count(180) == 2:
+                canvas.itemconfig(turbor3, fill='#19EB35')
+                canvas.itemconfig(turbor4, fill='#19EB35')   
+            elif refs.count(180) == 0:
+                canvas.itemconfig(turbor3, fill='#AEAEAE')
+                canvas.itemconfig(turbor4, fill='#AEAEAE') 
 
-                if refs.count(600) == 0:
-                    canvas.itemconfig(absortion1, fill='gray')
-                    canvas.itemconfig(absortion2, fill='gray') 
-                    canvas.itemconfig(absortion3, fill='gray')
-                    canvas.itemconfig(absortion4, fill='gray') 
-                
-                elif refs.count(600) == 1:
-                    canvas.itemconfig(absortion1, fill='#19EB35')
-                    canvas.itemconfig(absortion2, fill='gray') 
-                    canvas.itemconfig(absortion3, fill='gray')
-                    canvas.itemconfig(absortion4, fill='gray') 
-                
-                elif refs.count(600) == 2:
-                    canvas.itemconfig(absortion1, fill='#19EB35')
-                    canvas.itemconfig(absortion2, fill='#19EB35') 
-                    canvas.itemconfig(absortion3, fill='gray')
-                    canvas.itemconfig(absortion4, fill='gray') 
-                
-                elif refs.count(600) == 3:
-                    canvas.itemconfig(absortion1, fill='#19EB35')
-                    canvas.itemconfig(absortion2, fill='#19EB35') 
-                    canvas.itemconfig(absortion3, fill='#19EB35')
-                    canvas.itemconfig(absortion4, fill='gray') 
-                
-                elif refs.count(600) == 4:
-                    canvas.itemconfig(absortion1, fill='#19EB35')
-                    canvas.itemconfig(absortion2, fill='#19EB35') 
-                    canvas.itemconfig(absortion3, fill='#19EB35')
-                    canvas.itemconfig(absortion4, fill='#19EB35') 
+            if refs.count(600) == 0:
+                canvas.itemconfig(absortion1, fill='gray')
+                canvas.itemconfig(absortion2, fill='gray') 
+                canvas.itemconfig(absortion3, fill='gray')
+                canvas.itemconfig(absortion4, fill='gray') 
+            
+            elif refs.count(600) == 1:
+                canvas.itemconfig(absortion1, fill='#19EB35')
+                canvas.itemconfig(absortion2, fill='gray') 
+                canvas.itemconfig(absortion3, fill='gray')
+                canvas.itemconfig(absortion4, fill='gray') 
+            
+            elif refs.count(600) == 2:
+                canvas.itemconfig(absortion1, fill='#19EB35')
+                canvas.itemconfig(absortion2, fill='#19EB35') 
+                canvas.itemconfig(absortion3, fill='gray')
+                canvas.itemconfig(absortion4, fill='gray') 
+            
+            elif refs.count(600) == 3:
+                canvas.itemconfig(absortion1, fill='#19EB35')
+                canvas.itemconfig(absortion2, fill='#19EB35') 
+                canvas.itemconfig(absortion3, fill='#19EB35')
+                canvas.itemconfig(absortion4, fill='gray') 
+            
+            elif refs.count(600) == 4:
+                canvas.itemconfig(absortion1, fill='#19EB35')
+                canvas.itemconfig(absortion2, fill='#19EB35') 
+                canvas.itemconfig(absortion3, fill='#19EB35')
+                canvas.itemconfig(absortion4, fill='#19EB35') 
 
+            root.update()
+
+            
+            date_time = canvas.create_text(90, 30, text=date, font=('', 10), anchor='w')
+            degree = canvas.create_text(90, 50, text=entrophy, font=('', 10), anchor='w')
+            supply_degree = canvas.create_text(90, 70, text='7.0도', font=('', 10), anchor='w')
+            return_degree = canvas.create_text(90, 90, text=str(return_degree)+'도', font=('', 10), anchor='w')
+            rt = canvas.create_text(105, 110, text=total_rt, font=('', 10), anchor='w')
+
+            supply_coord = [190, 420, 190, 460]
+            return_coord = [190, 380, 190, 340]
+            supply_1 = canvas.create_polygon(supply_coord, fill='#0099ff')
+            for i in range(9):
+                sub_supply_coord = [190, 420, 190, 460, 190+i*10, 460, 190+i*10, 420]
+                canvas.coords(supply_1, sub_supply_coord)
                 root.update()
+                time.sleep(0.01)
 
-                color = 'orange'
-                date_time = canvas.create_text(90, 30, text=date, font=('', 10), anchor='w')
-                degree = canvas.create_text(90, 50, text=entrophy, font=('', 10), anchor='w')
-                supply_degree = canvas.create_text(90, 70, text='7.0도', font=('', 10), anchor='w')
-                return_degree = canvas.create_text(90, 90, text=return_degree+'도', font=('', 10), anchor='w')
-                rt = canvas.create_text(105, 110, text=total_rt, font=('', 10), anchor='w')
+            supply_2 = canvas.create_polygon([230, 460, 270, 460], fill='#0099ff')
+            for i in range(29):
+                sub_supply_coord = [230, 460, 270, 460, 270, 460+i*10, 230, 460+i*10]
+                canvas.coords(supply_2, sub_supply_coord)
+                root.update()
+                time.sleep(0.01)
+            
+            supply_3 = canvas.create_polygon([270, 420, 270, 460], fill='#0099ff')
+            for i in range(52):
+                sub_supply_coord = [270, 700, 270, 740, 270+i*10, 740, 270+i*10, 700]
+                canvas.coords(supply_3, sub_supply_coord)
+                root.update()
+                time.sleep(0.01)
 
-                supply_coord = [190, 420, 190, 460]
-                return_coord = [190, 380, 190, 340]
-                supply_1 = canvas.create_polygon(supply_coord, fill='#0099ff')
-                for i in range(9):
-                    sub_supply_coord = [190, 420, 190, 460, 190+i*10, 460, 190+i*10, 420]
-                    canvas.coords(supply_1, sub_supply_coord)
-                    root.update()
-                    time.sleep(0.01)
+            supply_4 = canvas.create_polygon([740, 700 ,780, 700], fill='#0099ff')
+            for i in range(29):
+                sub_supply_coord = [740, 700, 780, 700, 780, 700-i*10, 740, 700-i*10]
+                canvas.coords(supply_4, sub_supply_coord)
+                root.update()
+                time.sleep(0.01)
 
-                supply_2 = canvas.create_polygon([230, 460, 270, 460], fill='#0099ff')
-                for i in range(29):
-                    sub_supply_coord = [230, 460, 270, 460, 270, 460+i*10, 230, 460+i*10]
-                    canvas.coords(supply_2, sub_supply_coord)
-                    root.update()
-                    time.sleep(0.01)
+            time.sleep(0.5)
+            return_1 = canvas.create_polygon(return_coord, fill=color)
+            for i in range(33):
+                sub_return_coord = [740, 380, 780, 380, 780, 380-i*10, 740, 380-i*10]
+                canvas.coords(return_1, sub_return_coord)
+                root.update()
+                time.sleep(0.01)
+
+            return_2 = canvas.create_polygon([740, 100, 740, 60], fill=color)
+            for i in range(52):
+                sub_return_coord = [740, 60, 740, 100, 740-i*10, 100, 740-i*10, 60]
+                canvas.coords(return_2, sub_return_coord)
+                root.update()
+                time.sleep(0.01)
+
+            return_3 = canvas.create_polygon([230, 100, 270, 100], fill=color)
+            for i in range(29):
+                sub_return_coord = [230, 100, 270, 100, 270, 100+i*10, 230, 100+i*10]
+                canvas.coords(return_3, sub_return_coord)
+                root.update()
+                time.sleep(0.01)
+            
+            return_4 = canvas.create_polygon([230, 340, 230, 380], fill=color)
+            for i in range(9):
+                sub_return_coord = [230, 340, 230, 380, 230-i*10, 380, 230-i*10, 340]
+                canvas.coords(return_4, sub_return_coord)
+                root.update()
+                time.sleep(0.01)
                 
-                supply_3 = canvas.create_polygon([270, 420, 270, 460], fill='#0099ff')
-                for i in range(52):
-                    sub_supply_coord = [270, 700, 270, 740, 270+i*10, 740, 270+i*10, 700]
-                    canvas.coords(supply_3, sub_supply_coord)
-                    root.update()
-                    time.sleep(0.01)
-
-                supply_4 = canvas.create_polygon([740, 700 ,780, 700], fill='#0099ff')
-                for i in range(29):
-                    sub_supply_coord = [740, 700, 780, 700, 780, 700-i*10, 740, 700-i*10]
-                    canvas.coords(supply_4, sub_supply_coord)
-                    root.update()
-                    time.sleep(0.01)
-
-                time.sleep(0.5)
-                return_1 = canvas.create_polygon(return_coord, fill=color)
-                for i in range(33):
-                    sub_return_coord = [740, 380, 780, 380, 780, 380-i*10, 740, 380-i*10]
-                    canvas.coords(return_1, sub_return_coord)
-                    root.update()
-                    time.sleep(0.01)
-
-                return_2 = canvas.create_polygon([740, 100, 740, 60], fill=color)
-                for i in range(52):
-                    sub_return_coord = [740, 60, 740, 100, 740-i*10, 100, 740-i*10, 60]
-                    canvas.coords(return_2, sub_return_coord)
-                    root.update()
-                    time.sleep(0.01)
-
-                return_3 = canvas.create_polygon([230, 100, 270, 100], fill=color)
-                for i in range(29):
-                    sub_return_coord = [230, 100, 270, 100, 270, 100+i*10, 230, 100+i*10]
-                    canvas.coords(return_3, sub_return_coord)
-                    root.update()
-                    time.sleep(0.01)
-                
-                return_4 = canvas.create_polygon([230, 340, 230, 380], fill=color)
-                for i in range(9):
-                    sub_return_coord = [230, 340, 230, 380, 230-i*10, 380, 230-i*10, 340]
-                    canvas.coords(return_4, sub_return_coord)
-                    root.update()
-                    time.sleep(0.01)
-                    
-                time.sleep(0.5)
-                canvas.delete(supply_1, supply_2, supply_3, supply_4, return_1, return_2, return_3, return_4, date_time, degree, supply_degree, return_degree, rt)
-                
-        except:
-            messagebox.showwarning("파일 불러오기 오류", "파일을 불러올 수 없습니다.")
+            time.sleep(0.5)
+            canvas.delete(supply_1, supply_2, supply_3, supply_4, return_1, return_2, return_3, return_4, date_time, degree, supply_degree, return_degree, rt)
+            
+        # except:
+        #     messagebox.showwarning("파일 불러오기 오류", "파일을 불러올 수 없습니다.")
 
 open_button = Button(root, text='파일 열기', command = select_file)
 open_button.place(x=50, y=25)
