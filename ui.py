@@ -215,10 +215,14 @@ def read_file(filename):
         with open(filename, 'r', encoding='utf-8') as f:
             rdr = csv.reader(f)
             rdr = list(rdr)
-            for line in rdr[1:]:          
+            for line in rdr[1:]:    
+                try:
+                    canvas.delete(date_time, degree, supply_degree, return_degree, rt)
+                except:
+                    pass      
                 date_time, degree, supply_degree, return_degree, rt = set_color(line)
                 time.sleep(1)
-                canvas.delete(date_time, degree, supply_degree, return_degree, rt)
+                
             
 def select_file():
     global filename
@@ -280,7 +284,6 @@ def date_list(filename):
     select_date_button = Button(new_window, width=7, height=1, text='가져오기', command=lambda: select_date(df, list_.curselection(), new_window))
     select_date_button.place(x=245, y=30, anchor='ne')
     list_.config(yscrollcommand=scb.set)
-    print(date_list)
     for date in date_list:
         list_.insert('end', date)
 
@@ -291,5 +294,5 @@ read_button = Button(root, width=7, height=1, text='재생', command = lambda: r
 read_button.place(x=50, y=45)
 
 choice = Button(root, width=7, height=1, text='날짜 선택', command = lambda: date_list(filename))
-choice.place(x=950, y=45, anchor='ne')
+choice.place(x=953, y=45, anchor='ne')
 canvas.mainloop()
