@@ -1,11 +1,15 @@
+from fileinput import filename
 import time
 import csv
+import pandas as pd
 
 from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 from PIL import ImageTk, Image
 from matplotlib.pyplot import text
+
+filename = ''
 
 w = 900
 h = 800
@@ -25,6 +29,19 @@ root.iconbitmap('inu.ico')
 root.geometry('1000x950')
 
 
+
+# scroll_canvas = Canvas(root, width=300, height=20)
+# scroll_canvas.place(x=500, y=50, anchor='center')
+
+# list_ = Listbox(scroll_canvas, height=10, width=10)
+# x = []
+# for i in range(1, 31):
+#     x.append(str(i)+',')
+# list_.insert(0, x)
+# list_.pack(side='top')
+
+# scb = Scrollbar(scroll_canvas, orient='horizontal', command=list_.xview)
+# scb.pack(side='bottom', fill='both')
 canvas = Canvas(root, width=w, height=h, bg="white", highlightbackground='black')
 canvas.place(x=50, y=75)
 
@@ -93,8 +110,8 @@ canvas.create_rectangle(165, 480, 175, 460, fill='gray')
 canvas.create_rectangle(640, 200, 880, h-200, fill='gray')
 canvas.create_text(760, h/2, text='건물', font=('', 20))
 
-canvas.create_polygon(supply_pipe, fill='white', outline='black')
-canvas.create_polygon(return_pipe, fill='white', outline='black')
+supply_pipe = canvas.create_polygon(supply_pipe, fill='white', outline='black')
+return_pipe = canvas.create_polygon(return_pipe, fill='white', outline='black')
 
 canvas.create_text(500, 30, text='환수 파이프', font=("", 20))
 canvas.create_text(500, 670, text='공급 파이프', font=("", 20))
@@ -112,175 +129,167 @@ canvas.create_image(870, 30, anchor='nw',image=image)
 canvas.create_text(840, 35, anchor='w', text='17.0도', font=("", 7))
 canvas.create_text(840, 118, anchor='w', text='12.0도', font=("", 7))
 
+def set_color(line):
+    total_rt = str(line[0])
+    refs = list(map(int, eval(line[1])))
+    entrophy = str(line[2])
+    return_degree = float(line[3])
+    date = str(line[4])
+    color = 'orange'
+    if return_degree >=7 and return_degree <=12:
+        color = "#00FF11"
+    
+    elif return_degree >12 and return_degree <=15:
+        color = "yellow"
+    
+    elif return_degree > 15:
+        color = "red"
+
+    if refs.count(475) == 1:
+        canvas.itemconfig(turbor1, fill='#19EB35')
+        canvas.itemconfig(turbor2, fill='#AEAEAE')
+    elif refs.count(475) == 2:
+        canvas.itemconfig(turbor1, fill='#19EB35')
+        canvas.itemconfig(turbor2, fill='#19EB35')   
+    elif refs.count(475) == 0:
+        canvas.itemconfig(turbor1, fill='#AEAEAE')
+        canvas.itemconfig(turbor2, fill='#AEAEAE')     
+
+    if refs.count(180) == 1:
+        canvas.itemconfig(turbor3, fill='#19EB35')
+        canvas.itemconfig(turbor4, fill='#AEAEAE')
+    elif refs.count(180) == 2:
+        canvas.itemconfig(turbor3, fill='#19EB35')
+        canvas.itemconfig(turbor4, fill='#19EB35')   
+    elif refs.count(180) == 0:
+        canvas.itemconfig(turbor3, fill='#AEAEAE')
+        canvas.itemconfig(turbor4, fill='#AEAEAE') 
+
+    if refs.count(600) == 0:
+        canvas.itemconfig(absortion1, fill='gray')
+        canvas.itemconfig(absortion2, fill='gray') 
+        canvas.itemconfig(absortion3, fill='gray')
+        canvas.itemconfig(absortion4, fill='gray') 
+    
+    elif refs.count(600) == 1:
+        canvas.itemconfig(absortion1, fill='#19EB35')
+        canvas.itemconfig(absortion2, fill='gray') 
+        canvas.itemconfig(absortion3, fill='gray')
+        canvas.itemconfig(absortion4, fill='gray') 
+    
+    elif refs.count(600) == 2:
+        canvas.itemconfig(absortion1, fill='#19EB35')
+        canvas.itemconfig(absortion2, fill='#19EB35') 
+        canvas.itemconfig(absortion3, fill='gray')
+        canvas.itemconfig(absortion4, fill='gray') 
+    
+    elif refs.count(600) == 3:
+        canvas.itemconfig(absortion1, fill='#19EB35')
+        canvas.itemconfig(absortion2, fill='#19EB35') 
+        canvas.itemconfig(absortion3, fill='#19EB35')
+        canvas.itemconfig(absortion4, fill='gray') 
+    
+    elif refs.count(600) == 4:
+        canvas.itemconfig(absortion1, fill='#19EB35')
+        canvas.itemconfig(absortion2, fill='#19EB35') 
+        canvas.itemconfig(absortion3, fill='#19EB35')
+        canvas.itemconfig(absortion4, fill='#19EB35') 
+    
+    date_time = canvas.create_text(90, 30, text=date, font=('', 10), anchor='w')
+    degree = canvas.create_text(90, 50, text=entrophy, font=('', 10), anchor='w')
+    supply_degree = canvas.create_text(90, 70, text='5.0도', font=('', 10), anchor='w')
+    return_degree = canvas.create_text(90, 90, text=str(return_degree)+'도', font=('', 10), anchor='w')
+    rt = canvas.create_text(105, 110, text=total_rt+'rt', font=('', 10), anchor='w')
+
+    canvas.itemconfig(supply_pipe, fill='#0099ff')
+    canvas.itemconfig(return_pipe, fill=color)
+    
+    root.update()  
+
+    return date_time, degree, supply_degree, return_degree, rt
+
+def read_file(filename):
+    if filename == '':
+        messagebox.showwarning("파일 불러오기 오류", "파일을 먼저 선택해 주세요.")
+    else:
+        with open(filename, 'r', encoding='utf-8') as f:
+            rdr = csv.reader(f)
+            rdr = list(rdr)
+            for line in rdr[1:]:          
+                date_time, degree, supply_degree, return_degree, rt = set_color(line)
+                time.sleep(1)
+                canvas.delete(date_time, degree, supply_degree, return_degree, rt)
+            
 def select_file():
+    global filename
     filetypes = (
         ('csv files', '*.csv'),
         ('excel files', '*.xlsx'),
         ('All files', '*.*')
     )
+    try:
+        file = filedialog.askopenfilename(
+            title='파일 선택',
+            initialdir='/',
+            filetypes=filetypes)
 
-    filename = filedialog.askopenfilename(
-        title='파일 선택',
-        initialdir='/',
-        filetypes=filetypes)
+        filename = file
 
-    with open(filename, 'r', encoding='utf-8') as f:
-        # try:
-        rdr = csv.reader(f)
-        rdr = list(rdr)
-        # lines = f.readlines()
-        for line in rdr:
-            print(line[1])
-            
-            total_rt = str(line[0])
-            refs = list(map(int, eval(line[1])))
-            entrophy = str(line[2])
-            return_degree = float(line[3])
-            date = str(line[4])
-            color = 'orange'
-            if return_degree >=7 and return_degree <=12:
-                color = "#00FF11"
-            
-            elif return_degree >12 and return_degree <=15:
-                color = "yellow"
-            
-            elif return_degree > 15:
-                color = "red"
+    except:
+        messagebox.showwarning("파일 불러오기 오류", "파일을 불러올 수 없습니다.")
 
-            if refs.count(475) == 1:
-                canvas.itemconfig(turbor1, fill='#19EB35')
-                canvas.itemconfig(turbor2, fill='#AEAEAE')
-            elif refs.count(475) == 2:
-                canvas.itemconfig(turbor1, fill='#19EB35')
-                canvas.itemconfig(turbor2, fill='#19EB35')   
-            elif refs.count(475) == 0:
-                canvas.itemconfig(turbor1, fill='#AEAEAE')
-                canvas.itemconfig(turbor2, fill='#AEAEAE')     
+def select_date(df, date_index, new_window):
+    select = df.loc[date_index].tolist()
+    date_time, degree, supply_degree, return_degree, rt = set_color(select)
+    try:
+        canvas.delete(date_time, degree, supply_degree, return_degree, rt)
+    except:
+        pass
+    new_window.destroy()
+    
+def date_list(filename):
+    if 'csv' in filename:
+        df = pd.read_csv(filename)
 
-            if refs.count(180) == 1:
-                canvas.itemconfig(turbor3, fill='#19EB35')
-                canvas.itemconfig(turbor4, fill='#AEAEAE')
-            elif refs.count(180) == 2:
-                canvas.itemconfig(turbor3, fill='#19EB35')
-                canvas.itemconfig(turbor4, fill='#19EB35')   
-            elif refs.count(180) == 0:
-                canvas.itemconfig(turbor3, fill='#AEAEAE')
-                canvas.itemconfig(turbor4, fill='#AEAEAE') 
+    elif 'xlsx' in filename:
+        df = pd.read_excel(filename)
+    
+    else:
+        messagebox.showwarning("파일 불러오기 오류", "파일을 먼저 선택해 주세요.")
+    
+    date_list = df['date'].tolist()
 
-            if refs.count(600) == 0:
-                canvas.itemconfig(absortion1, fill='gray')
-                canvas.itemconfig(absortion2, fill='gray') 
-                canvas.itemconfig(absortion3, fill='gray')
-                canvas.itemconfig(absortion4, fill='gray') 
-            
-            elif refs.count(600) == 1:
-                canvas.itemconfig(absortion1, fill='#19EB35')
-                canvas.itemconfig(absortion2, fill='gray') 
-                canvas.itemconfig(absortion3, fill='gray')
-                canvas.itemconfig(absortion4, fill='gray') 
-            
-            elif refs.count(600) == 2:
-                canvas.itemconfig(absortion1, fill='#19EB35')
-                canvas.itemconfig(absortion2, fill='#19EB35') 
-                canvas.itemconfig(absortion3, fill='gray')
-                canvas.itemconfig(absortion4, fill='gray') 
-            
-            elif refs.count(600) == 3:
-                canvas.itemconfig(absortion1, fill='#19EB35')
-                canvas.itemconfig(absortion2, fill='#19EB35') 
-                canvas.itemconfig(absortion3, fill='#19EB35')
-                canvas.itemconfig(absortion4, fill='gray') 
-            
-            elif refs.count(600) == 4:
-                canvas.itemconfig(absortion1, fill='#19EB35')
-                canvas.itemconfig(absortion2, fill='#19EB35') 
-                canvas.itemconfig(absortion3, fill='#19EB35')
-                canvas.itemconfig(absortion4, fill='#19EB35') 
+    height = 18*len(date_list)+70
+    new_window = Toplevel(root)
+    new_window.title("Select date")
+    new_window.iconbitmap('inu.ico')
+    new_window.resizable(False, False)
+    new_window.geometry('270x{}'.format(str(height)))
+    text = Label(new_window, text='날짜')
+    text.place(x=34, y=10)
 
-            root.update()
+    frame = Frame(new_window)
+    frame.place(x=10, y=30, width=200, height=18*len(date_list))
 
-            
-            date_time = canvas.create_text(90, 30, text=date, font=('', 10), anchor='w')
-            degree = canvas.create_text(90, 50, text=entrophy, font=('', 10), anchor='w')
-            supply_degree = canvas.create_text(90, 70, text='7.0도', font=('', 10), anchor='w')
-            return_degree = canvas.create_text(90, 90, text=str(return_degree)+'도', font=('', 10), anchor='w')
-            rt = canvas.create_text(105, 110, text=total_rt+'rt', font=('', 10), anchor='w')
+    list_ = Listbox(frame, height=200, width=20)
+    list_.pack(side='top')
+    scb = Scrollbar(new_window, orient='vertical')
+    scb.config(command=list_.yview)
+    scb.pack(side='right', fill='y')  
 
-            supply_coord = [190, 420, 190, 460]
-            return_coord = [190, 380, 190, 340]
-            supply_1 = canvas.create_polygon(supply_coord, fill='#0099ff')
-            for i in range(9):
-                sub_supply_coord = [190, 420, 190, 460, 190+i*10, 460, 190+i*10, 420]
-                canvas.coords(supply_1, sub_supply_coord)
-                root.update()
-                time.sleep(0.01)
+    select_date_button = Button(new_window, width=7, height=1, text='가져오기', command=lambda: select_date(df, list_.curselection(), new_window))
+    select_date_button.place(x=245, y=30, anchor='ne')
+    list_.config(yscrollcommand=scb.set)
+    print(date_list)
+    for date in date_list:
+        list_.insert('end', date)
 
-            supply_2 = canvas.create_polygon([230, 460, 270, 460], fill='#0099ff')
-            for i in range(29):
-                sub_supply_coord = [230, 460, 270, 460, 270, 460+i*10, 230, 460+i*10]
-                canvas.coords(supply_2, sub_supply_coord)
-                root.update()
-                time.sleep(0.01)
-            
-            supply_3 = canvas.create_polygon([270, 420, 270, 460], fill='#0099ff')
-            for i in range(52):
-                sub_supply_coord = [270, 700, 270, 740, 270+i*10, 740, 270+i*10, 700]
-                canvas.coords(supply_3, sub_supply_coord)
-                root.update()
-                time.sleep(0.01)
+open_button = Button(root, width=7, height=1, text='파일 열기', command = select_file)
+open_button.place(x=50, y=15)
 
-            supply_4 = canvas.create_polygon([740, 700 ,780, 700], fill='#0099ff')
-            for i in range(29):
-                sub_supply_coord = [740, 700, 780, 700, 780, 700-i*10, 740, 700-i*10]
-                canvas.coords(supply_4, sub_supply_coord)
-                root.update()
-                time.sleep(0.01)
+read_button = Button(root, width=7, height=1, text='재생', command = lambda: read_file(filename))
+read_button.place(x=50, y=45)
 
-            time.sleep(0.5)
-            return_1 = canvas.create_polygon(return_coord, fill=color)
-            for i in range(33):
-                sub_return_coord = [740, 380, 780, 380, 780, 380-i*10, 740, 380-i*10]
-                canvas.coords(return_1, sub_return_coord)
-                root.update()
-                time.sleep(0.01)
-
-            return_2 = canvas.create_polygon([740, 100, 740, 60], fill=color)
-            for i in range(52):
-                sub_return_coord = [740, 60, 740, 100, 740-i*10, 100, 740-i*10, 60]
-                canvas.coords(return_2, sub_return_coord)
-                root.update()
-                time.sleep(0.01)
-
-            return_3 = canvas.create_polygon([230, 100, 270, 100], fill=color)
-            for i in range(29):
-                sub_return_coord = [230, 100, 270, 100, 270, 100+i*10, 230, 100+i*10]
-                canvas.coords(return_3, sub_return_coord)
-                root.update()
-                time.sleep(0.01)
-            
-            return_4 = canvas.create_polygon([230, 340, 230, 380], fill=color)
-            for i in range(9):
-                sub_return_coord = [230, 340, 230, 380, 230-i*10, 380, 230-i*10, 340]
-                canvas.coords(return_4, sub_return_coord)
-                root.update()
-                time.sleep(0.01)
-                
-            time.sleep(0.5)
-            canvas.delete(supply_1, supply_2, supply_3, supply_4, return_1, return_2, return_3, return_4, date_time, degree, supply_degree, return_degree, rt)
-            
-        # except:
-        #     messagebox.showwarning("파일 불러오기 오류", "파일을 불러올 수 없습니다.")
-
-open_button = Button(root, text='파일 열기', command = select_file)
-open_button.place(x=50, y=25)
-
-# arc1 = canvas.create_arc(lupx, lupy, lupx-50, lupy+50, start = 160, extent=120, style=ARC) # extent 호의 각도, style=ARC 일 때 호만, 없을 때 피자형태
-# point = [w/2-25, h/2+10, w/2+25, h/2+10, w/2, h/2-40]
-# canvas.create_polygon(point, outline='black', fill='white', width=3)
-# canvas.create_line(lupx, lupy, rdpx, rdpy, fill='red')#코드 순서대로 도형 순서
-# #canvas.create_image(rdpx, rdpy, anchor=NW, image=PhotoImage(file="")) anchor=NW: 이미지의 좌상단점을 기준점으로 사용
-# for x in range(120):
-#     canvas.move(arc1, 5, 0)# (n, x, y) n object를 x좌표를 x만큼, y좌표를 y만큼 이동
-#     root.update()
-#     time.sleep(1/60)
+choice = Button(root, width=7, height=1, text='날짜 선택', command = lambda: date_list(filename))
+choice.place(x=950, y=45, anchor='ne')
 canvas.mainloop()
