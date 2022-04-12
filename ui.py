@@ -11,7 +11,7 @@ from matplotlib.pyplot import text
 
 filename = ''
 
-w = 900
+w = 1500
 h = 800
 
 lupx = lupy = 20
@@ -26,7 +26,7 @@ root = Tk()
 root.title("Energy ui")
 root.resizable(False, False)
 root.iconbitmap('inu.ico')
-root.geometry('1000x950')
+root.geometry('1600x950')
 
 canvas = Canvas(root, width=w, height=h, bg="white", highlightbackground='black')
 canvas.place(x=50, y=75)
@@ -200,6 +200,8 @@ def set_color(line):
     return date_time, degree, supply_degree, return_degree, rt
 
 def read_file(filename):
+    global date_time, degree, supply_degree, return_degree, rt
+
     if filename == '':
         messagebox.showwarning("파일 불러오기 오류", "파일을 먼저 선택해 주세요.")
     else:
@@ -217,6 +219,7 @@ def read_file(filename):
             
 def select_file():
     global filename
+    global df
     filetypes = (
         ('csv files', '*.csv'),
         ('excel files', '*.xlsx'),
@@ -229,17 +232,29 @@ def select_file():
             filetypes=filetypes)
 
         filename = file
+        if 'csv' in filename:
+            df = pd.read_csv(filename)
+        elif 'xlsx' in filename:
+            df = pd.read_excel(filename)
+        date = df['date'].tolist()
+        for d in date:
+            testlist.insert('end', d)
+
+        testlist.config(yscrollcommand=scroll.set)
+        scroll.config(command=custom_command)
 
     except:
         messagebox.showwarning("파일 불러오기 오류", "파일을 불러올 수 없습니다.")
 
-def select_date(df, date_index):
+def select_date(date_index):
+    global date_time, degree, supply_degree, return_degree, rt
+
     select = df.loc[date_index].tolist()
-    date_time, degree, supply_degree, return_degree, rt = set_color(select)
     try:
         canvas.delete(date_time, degree, supply_degree, return_degree, rt)
     except:
-        pass
+        pass      
+    date_time, degree, supply_degree, return_degree, rt = set_color(select)
     
 def date_list(filename):
     if 'csv' in filename:
@@ -267,16 +282,37 @@ def date_list(filename):
 
     list_ = Listbox(frame, height=200, width=20)
     list_.pack(side='top')
-    list_.bind('<Double-1>', lambda event: select_date(df, list_.curselection()))
+    list_.bind('<Double-1>', lambda event: select_date(list_.curselection()))
     scb = Scrollbar(new_window, orient='vertical')
     scb.config(command=list_.yview)
     scb.pack(side='right', fill='y')  
 
-    select_date_button = Button(new_window, width=7, height=1, text='가져오기', command=lambda: select_date(df, list_.curselection()))
+    select_date_button = Button(new_window, width=7, height=1, text='가져오기', command=lambda: select_date(list_.curselection()))
     select_date_button.place(x=245, y=30, anchor='ne')
     list_.config(yscrollcommand=scb.set)
     for date in date_list:
         list_.insert('end', date)
+
+def custom_command(*args):
+    testlist.yview(*args)
+    global date_time, degree, supply_degree, return_degree, rt
+
+    select = df.loc[testlist.nearest(0)].tolist()
+    try:
+        canvas.delete(date_time, degree, supply_degree, return_degree, rt)
+    except:
+        pass      
+    date_time, degree, supply_degree, return_degree, rt = set_color(select)
+
+date_frame = Frame(root)
+date_frame.place(x=750, y=40, anchor='center')
+
+testlist = Listbox(date_frame, height=1, width=20)
+testlist.pack(side='top')
+
+scroll = Scrollbar(date_frame, orient='horizontal')
+scroll.pack(side='bottom', fill='both')
+
 
 open_button = Button(root, width=7, height=1, text='파일 열기', command = select_file)
 open_button.place(x=50, y=15)
