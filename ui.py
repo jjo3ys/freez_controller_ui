@@ -28,20 +28,6 @@ root.resizable(False, False)
 root.iconbitmap('inu.ico')
 root.geometry('1000x950')
 
-
-
-# scroll_canvas = Canvas(root, width=300, height=20)
-# scroll_canvas.place(x=500, y=50, anchor='center')
-
-# list_ = Listbox(scroll_canvas, height=10, width=10)
-# x = []
-# for i in range(1, 31):
-#     x.append(str(i)+',')
-# list_.insert(0, x)
-# list_.pack(side='top')
-
-# scb = Scrollbar(scroll_canvas, orient='horizontal', command=list_.xview)
-# scb.pack(side='bottom', fill='both')
 canvas = Canvas(root, width=w, height=h, bg="white", highlightbackground='black')
 canvas.place(x=50, y=75)
 
@@ -74,9 +60,11 @@ return_pipe = [190, h/2-20,
                230, h/2-60,
                190, h/2-60]
 
+#냉동기
 canvas.create_rectangle(30, 340, 190, 460, fill='#0099ff')
 canvas.create_text(115, 400, text="냉동기", font=('', 20))
 
+#터보식 냉동기
 canvas.create_text(110, 260, text='터보식', font=('', 10))
 turbor1 = canvas.create_rectangle(35, 290, 65, 320, fill='#AEAEAE')#475
 canvas.create_text(50, 305, text='1', font=('', 10))
@@ -92,6 +80,7 @@ canvas.create_rectangle(85, 320, 95, 340, fill='#AEAEAE')
 canvas.create_rectangle(125, 320, 135, 340, fill='#AEAEAE')
 canvas.create_rectangle(165, 320, 175, 340, fill='#AEAEAE')
 
+#흡수식 냉동기
 canvas.create_text(110, 540, text='흡수식', font=('', 10))
 absortion1 = canvas.create_rectangle(35, 510, 65, 480, fill='gray')#600
 canvas.create_text(50, 495, text='1', font=('', 10))
@@ -107,9 +96,11 @@ canvas.create_rectangle(85, 480, 95, 460, fill='gray')
 canvas.create_rectangle(125, 480, 135, 460, fill='gray')
 canvas.create_rectangle(165, 480, 175, 460, fill='gray')
 
+#건물
 canvas.create_rectangle(640, 200, 880, h-200, fill='gray')
 canvas.create_text(760, h/2, text='건물', font=('', 20))
 
+#파이프
 supply_pipe = canvas.create_polygon(supply_pipe, fill='white', outline='black')
 return_pipe = canvas.create_polygon(return_pipe, fill='white', outline='black')
 
@@ -242,14 +233,13 @@ def select_file():
     except:
         messagebox.showwarning("파일 불러오기 오류", "파일을 불러올 수 없습니다.")
 
-def select_date(df, date_index, new_window):
+def select_date(df, date_index):
     select = df.loc[date_index].tolist()
     date_time, degree, supply_degree, return_degree, rt = set_color(select)
     try:
         canvas.delete(date_time, degree, supply_degree, return_degree, rt)
     except:
         pass
-    new_window.destroy()
     
 def date_list(filename):
     if 'csv' in filename:
@@ -273,15 +263,16 @@ def date_list(filename):
     text.place(x=34, y=10)
 
     frame = Frame(new_window)
-    frame.place(x=10, y=30, width=200, height=18*len(date_list))
+    frame.place(x=10, y=30, width=200, height=height-70)
 
     list_ = Listbox(frame, height=200, width=20)
     list_.pack(side='top')
+    list_.bind('<Double-1>', lambda event: select_date(df, list_.curselection()))
     scb = Scrollbar(new_window, orient='vertical')
     scb.config(command=list_.yview)
     scb.pack(side='right', fill='y')  
 
-    select_date_button = Button(new_window, width=7, height=1, text='가져오기', command=lambda: select_date(df, list_.curselection(), new_window))
+    select_date_button = Button(new_window, width=7, height=1, text='가져오기', command=lambda: select_date(df, list_.curselection()))
     select_date_button.place(x=245, y=30, anchor='ne')
     list_.config(yscrollcommand=scb.set)
     for date in date_list:
