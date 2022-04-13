@@ -28,10 +28,19 @@ def main():
     supply_pipe = [190, h/2+20, 
                 270, h/2+20, 
                 270, h-100,
-                740, h-100,
-                740, h-200,
-                780, h-200,
-                780, h-60,
+                620, h-100,
+                620, h-250,
+                660, h-250,
+                660, h-100,
+                920, h-100,
+                920, h-250,
+                960, h-250,
+                960, h-100,
+                1320, h-100,
+                1320, h-250,
+                1360, h-250,
+                1360, h-60,
+
                 230, h-60,
                 230, h/2+60,
                 190, h/2+60]
@@ -39,10 +48,18 @@ def main():
     return_pipe = [190, h/2-20, 
                 270, h/2-20, 
                 270, 100,
-                740, 100,
-                740, 200,
-                780, 200,
-                780, 60,
+                620, 100,
+                620, 250,
+                660, 250,
+                660, 100,
+                920, 100,
+                920, 250,
+                960, 250,
+                960, 100,
+                1320, 100,
+                1320, 250,
+                1360, 250,
+                1360, 60,
                 230, 60,
                 230, h/2-60,
                 190, h/2-60]
@@ -84,15 +101,23 @@ def main():
     canvas.create_rectangle(165, 480, 175, 460, fill='gray')
 
     #건물
-    canvas.create_rectangle(640, 200, 880, h-200, fill='gray')
-    canvas.create_text(760, h/2, text='건물', font=('', 20))
+    canvas.create_rectangle(540, 250, 740, h-250, fill='gray')
+    canvas.create_text(640, h/2, text='건물1', font=('', 20), anchor='center')
+
+    canvas.create_rectangle(840, 250, 1040, h-250, fill='gray')
+    canvas.create_text(940, h/2, text='건물2', font=('', 20), anchor='center')
+
+    canvas.create_text(1140, h/2, text='. . .', font=('', 40), anchor='center')
+
+    canvas.create_rectangle(1240, 250, 1440, h-250, fill='gray')
+    canvas.create_text(1340, h/2, text='건물N', font=('', 20), anchor='center')
 
     #파이프
     supply_pipe = canvas.create_polygon(supply_pipe, fill='white', outline='black')
     return_pipe = canvas.create_polygon(return_pipe, fill='white', outline='black')
 
-    canvas.create_text(500, 30, text='환수 파이프', font=("", 20))
-    canvas.create_text(500, 670, text='공급 파이프', font=("", 20))
+    canvas.create_text(790, 80, text='환수 파이프', font=("", 20), anchor='center')
+    canvas.create_text(790, 720, text='공급 파이프', font=("", 20), anchor='center')
 
     canvas.create_text(85, 30, text='날짜/시간 :', font=('', 10), anchor='e')
     canvas.create_text(85, 50, text='외기 온도 :', font=('', 10), anchor='e')
@@ -102,10 +127,11 @@ def main():
 
     image = Image.open("green_to_red.png").resize((20, 95))
     image = ImageTk.PhotoImage(image)
-    canvas.create_text(820, 20, anchor='w', text='환수 온도 색상 변화', font=("", 7))
-    canvas.create_image(870, 30, anchor='nw',image=image)
-    canvas.create_text(840, 35, anchor='w', text='17.0도', font=("", 7))
-    canvas.create_text(840, 118, anchor='w', text='12.0도', font=("", 7))
+
+    canvas.create_text(1420, 20, anchor='w', text='환수 온도 색상 변화', font=("", 7))
+    canvas.create_image(1470, 30, anchor='nw',image=image)
+    canvas.create_text(1440, 35, anchor='w', text='17.0도', font=("", 7))
+    canvas.create_text(1440, 118, anchor='w', text='12.0도', font=("", 7))
 
     date_frame = Frame(root)
     date_frame.place(x=750, y=30, anchor='center', height=60, width=300)
@@ -123,10 +149,10 @@ def main():
     open_button.place(x=50, y=15)
 
     read_button = Button(root, width=7, height=1, text='재생', command = lambda: read_file())
-    read_button.place(x=50, y=45)
+    read_button.place(x=910, y=20)
 
     choice = Button(root, width=7, height=1, text='날짜 선택', command = lambda: get_date_list())
-    choice.place(x=1553, y=45, anchor='ne')
+    choice.place(x=910, y=45)
     
     canvas.mainloop()
 
