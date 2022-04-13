@@ -8,7 +8,7 @@ from PIL import ImageTk, Image
 
 def main():
     global canvas, root
-    global testlist, scroll
+    global date_list_box, scroll
     global absortion1, absortion2, absortion3, absortion4
     global turbor1, turbor2, turbor3, turbor4
     global return_pipe, supply_pipe
@@ -113,8 +113,8 @@ def main():
     text_ = Label(date_frame, text='날짜/시간', width=20, height=1)
     text_.pack(side='top')
     
-    testlist = Listbox(date_frame, height=1, width=20)
-    testlist.pack(side='top')
+    date_list_box = Listbox(date_frame, height=1, width=20)
+    date_list_box.pack(side='top')
 
     scroll = Scrollbar(date_frame, orient='horizontal')
     scroll.pack(side='top', fill='both')
@@ -212,6 +212,7 @@ def set_color(line):
 def open_file():
     global df
     global filename
+    global date
 
     filetypes = (
         ('csv files', '*.csv'),
@@ -230,10 +231,16 @@ def open_file():
         elif 'xlsx' in filename:
             df = pd.read_excel(filename)
         date = df['date'].tolist()
-        for d in date:
-            testlist.insert('end', d)
 
-        testlist.config(yscrollcommand=scroll.set)
+        try:
+            date_list_box.delete(0, END)
+        except:
+            pass
+
+        for d in date:
+            date_list_box.insert('end', d)
+
+        date_list_box.config(yscrollcommand=scroll.set)
         scroll.config(command=custom_command)
 
     except:
@@ -241,11 +248,11 @@ def open_file():
 
 def read_file():  
     global df 
-    
+    global date_list_box
     try:          
         df_list = df.to_numpy().tolist()
-        for i in range(len(df_list)):  
-            testlist.see(i)
+        for i in range(date_list_box.nearest(0), len(df_list)):  
+            date_list_box.see(i)
 
             try:
                 canvas.delete(date_time, degree, supply_degree, return_degree, rt)
@@ -261,7 +268,7 @@ def read_file():
 def select_date(date_index):
     global select
 
-    testlist.see(date_index)
+    date_list_box.see(date_index)
     select = df.loc[date_index].tolist()
     try:
         canvas.delete(date_time, degree, supply_degree, return_degree, rt)
@@ -270,45 +277,47 @@ def select_date(date_index):
 
     set_color(select)
     
-def get_date_list():
+def get_date_list():   
     try:
-        date_list = df['date'].tolist()
-    except:
+        height = 18*len(date)+70
+        if height > 600:
+            height = 600
+
+        new_window = Toplevel(root)
+        new_window.title("Select date")
+        new_window.iconbitmap('inu.ico')
+        new_window.resizable(False, False)
+        new_window.geometry('270x{}'.format(str(height)))
+        text = Label(new_window, text='날짜')
+        text.place(x=34, y=10)
+
+        frame = Frame(new_window)
+        frame.place(x=10, y=30, width=200, height=height-70)
+
+        list_ = Listbox(frame, height=200, width=20)
+        list_.pack(side='top')
+        list_.bind('<Double-1>', lambda event: select_date(list_.curselection()))
+
+        scb = Scrollbar(new_window, orient='vertical')
+        scb.config(command=list_.yview)
+        scb.pack(side='right', fill='y')  
+
+        select_date_button = Button(new_window, width=7, height=1, text='가져오기', command=lambda: select_date(list_.curselection()))
+        select_date_button.place(x=245, y=30, anchor='ne')
+        list_.config(yscrollcommand=scb.set)
+        for d in date:
+            list_.insert('end', d)
+
+    except NameError:
         messagebox.showerror("파일 불러오기 오류", "파일을 먼저 선택해 주세요.")
 
-    height = 18*len(date_list)+70
-    if height > 600:
-        height = 600
-
-    new_window = Toplevel(root)
-    new_window.title("Select date")
-    new_window.iconbitmap('inu.ico')
-    new_window.resizable(False, False)
-    new_window.geometry('270x{}'.format(str(height)))
-    text = Label(new_window, text='날짜')
-    text.place(x=34, y=10)
-
-    frame = Frame(new_window)
-    frame.place(x=10, y=30, width=200, height=height-70)
-
-    list_ = Listbox(frame, height=200, width=20)
-    list_.pack(side='top')
-    list_.bind('<Double-1>', lambda event: select_date(list_.curselection()))
-    scb = Scrollbar(new_window, orient='vertical')
-    scb.config(command=list_.yview)
-    scb.pack(side='right', fill='y')  
-
-    select_date_button = Button(new_window, width=7, height=1, text='가져오기', command=lambda: select_date(list_.curselection()))
-    select_date_button.place(x=245, y=30, anchor='ne')
-    list_.config(yscrollcommand=scb.set)
-    for date in date_list:
-        list_.insert('end', date)
+    
 
 def custom_command(*args):
     global select
 
-    testlist.yview(*args)
-    select = df.loc[testlist.nearest(0)].tolist()
+    date_list_box.yview(*args)
+    select = df.loc[date_list_box.nearest(0)].tolist()
 
     try:
         canvas.delete(date_time, degree, supply_degree, return_degree, rt)
