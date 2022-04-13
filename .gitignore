@@ -1,0 +1,7 @@
+*
+!*.py
+!*.png
+!*.ico
+!*.csv
+!*.xlsx
+!*.gitignore
