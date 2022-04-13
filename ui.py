@@ -119,6 +119,15 @@ def main():
     canvas.create_text(790, 80, text='환수 파이프', font=("", 20), anchor='center')
     canvas.create_text(790, 720, text='공급 파이프', font=("", 20), anchor='center')
 
+    #펌프
+    canvas.create_polygon([220, 495, 280, 525, 280, 495, 220, 525], fill='blue', outline='black')
+    canvas.create_text(350, 510, text='1차 펌프', font=("", 20), anchor='center')
+
+    canvas.create_polygon([610, h-200, 670, h-170, 670, h-200, 610, h-170], fill='blue', outline='black')
+    canvas.create_polygon([910, h-200, 970, h-170, 970, h-200, 910, h-170], fill='blue', outline='black')
+    canvas.create_polygon([1310, h-200, 1370, h-170, 1370, h-200, 1310, h-170], fill='blue', outline='black')
+    canvas.create_text(790, h-185, text='2차 펌프', font=("", 15), anchor='center')
+
     canvas.create_text(85, 30, text='날짜/시간 :', font=('', 10), anchor='e')
     canvas.create_text(85, 50, text='외기 온도 :', font=('', 10), anchor='e')
     canvas.create_text(85, 70, text='공급 온도 :', font=('', 10), anchor='e')
