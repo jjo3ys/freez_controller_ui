@@ -309,7 +309,7 @@ def get_date_list():
             list_.insert('end', d)
 
     except NameError:
-        messagebox.showerror("파일 불러오기 오류", "파일을 먼저 선택해 주세요.")
+        messagebox.showwarning("파일 불러오기 오류", "파일을 먼저 선택해 주세요.")
 
     
 
