@@ -1,5 +1,4 @@
 import time
-from turtle import bgcolor
 import pandas as pd
 
 from tkinter import *
@@ -26,13 +25,6 @@ def main():
     canvas = Canvas(root, width=w, height=h, bg="white", highlightbackground='black')
     canvas.place(x=50, y=75)
 
-    # img = Image.open('refrigerator.png')
-    # img = img.resize((300,150))
-    # img = ImageTk.PhotoImage(img)
-    # canvas.create_image(180, h/2, image=img)
-    #canvas.create_line(222, 444, 50, 644)#x 222 y 444 공급 박스 중심점
-    # circle = canvas.create_oval(lupx, lupy, lupx+50, lupy+50)#생성하려는원 외접 사각형의 좌상단, 우하단 좌표
-    # rectangle = canvas.create_rectangle(rdpx-50, rdpy-50, rdpx, rdpy, fill='gray')
     supply_pipe = [190, h/2+20, 
                 270, h/2+20, 
                 270, h-100,
@@ -126,7 +118,6 @@ def main():
 
     scroll = Scrollbar(date_frame, orient='horizontal')
     scroll.pack(side='top', fill='both')
-
 
     open_button = Button(root, width=7, height=1, text='파일 열기', command = open_file)
     open_button.place(x=50, y=15)
@@ -267,8 +258,6 @@ def read_file():
     except:
         messagebox.showwarning("파일 불러오기 오류", "파일을 먼저 선택해 주세요.")              
             
-
-
 def select_date(date_index):
     global select
 
@@ -290,7 +279,7 @@ def get_date_list():
     height = 18*len(date_list)+70
     if height > 600:
         height = 600
-        
+
     new_window = Toplevel(root)
     new_window.title("Select date")
     new_window.iconbitmap('inu.ico')
