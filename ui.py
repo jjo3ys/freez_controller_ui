@@ -234,10 +234,10 @@ def set_color(line):
         canvas.itemconfig(absortion4, fill='#19EB35') 
     
     date_time = canvas.create_text(90, 30, text=date, font=('', 10), anchor='w')
-    degree = canvas.create_text(90, 50, text=entrophy, font=('', 10), anchor='w')
+    degree = canvas.create_text(90, 50, text=str(entrophy)+'도', font=('', 10), anchor='w')
     supply_degree = canvas.create_text(90, 70, text='5.0도', font=('', 10), anchor='w')
     return_degree = canvas.create_text(90, 90, text=str(return_degree)+'도', font=('', 10), anchor='w')
-    rt = canvas.create_text(105, 110, text=total_rt+'rt', font=('', 10), anchor='w')
+    rt = canvas.create_text(105, 110, text=total_rt+'RT', font=('', 10), anchor='w')
 
     canvas.itemconfig(supply_pipe, fill='#0099ff')
     canvas.itemconfig(return_pipe, fill=color)
