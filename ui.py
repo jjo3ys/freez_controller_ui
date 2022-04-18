@@ -183,55 +183,45 @@ def set_color(line):
     elif return_degree > 15:
         color = "red"
 
-    if refs.count(475) == 1:
+    if refs[0] == 1:
         canvas.itemconfig(turbor1, fill='#19EB35')
-        canvas.itemconfig(turbor2, fill='#AEAEAE')
-    elif refs.count(475) == 2:
-        canvas.itemconfig(turbor1, fill='#19EB35')
-        canvas.itemconfig(turbor2, fill='#19EB35')   
-    elif refs.count(475) == 0:
+    elif refs[0] == 0:
         canvas.itemconfig(turbor1, fill='#AEAEAE')
-        canvas.itemconfig(turbor2, fill='#AEAEAE')     
 
-    if refs.count(180) == 1:
+    if refs[1] == 1:
+        canvas.itemconfig(turbor2, fill='#19EB35')
+    elif refs[1] == 0:
+        canvas.itemconfig(turbor2, fill='#AEAEAE')
+
+    if refs[2] == 1:
         canvas.itemconfig(turbor3, fill='#19EB35')
-        canvas.itemconfig(turbor4, fill='#AEAEAE')
-    elif refs.count(180) == 2:
-        canvas.itemconfig(turbor3, fill='#19EB35')
-        canvas.itemconfig(turbor4, fill='#19EB35')   
-    elif refs.count(180) == 0:
+    elif refs[2] == 0:
         canvas.itemconfig(turbor3, fill='#AEAEAE')
-        canvas.itemconfig(turbor4, fill='#AEAEAE') 
 
-    if refs.count(600) == 0:
-        canvas.itemconfig(absortion1, fill='gray')
-        canvas.itemconfig(absortion2, fill='gray') 
-        canvas.itemconfig(absortion3, fill='gray')
-        canvas.itemconfig(absortion4, fill='gray') 
-    
-    elif refs.count(600) == 1:
+    if refs[3] == 1:
+        canvas.itemconfig(turbor4, fill='#19EB35')
+    elif refs[3] == 0:
+        canvas.itemconfig(turbor4, fill='#AEAEAE')
+
+    if refs[4] == 1:
         canvas.itemconfig(absortion1, fill='#19EB35')
-        canvas.itemconfig(absortion2, fill='gray') 
-        canvas.itemconfig(absortion3, fill='gray')
-        canvas.itemconfig(absortion4, fill='gray') 
-    
-    elif refs.count(600) == 2:
-        canvas.itemconfig(absortion1, fill='#19EB35')
-        canvas.itemconfig(absortion2, fill='#19EB35') 
-        canvas.itemconfig(absortion3, fill='gray')
-        canvas.itemconfig(absortion4, fill='gray') 
-    
-    elif refs.count(600) == 3:
-        canvas.itemconfig(absortion1, fill='#19EB35')
-        canvas.itemconfig(absortion2, fill='#19EB35') 
+    elif refs[4] == 0:
+        canvas.itemconfig(absortion1, fill='#AEAEAE')
+
+    if refs[5] == 1:
+        canvas.itemconfig(absortion2, fill='#19EB35')
+    elif refs[5] == 0:
+        canvas.itemconfig(absortion2, fill='#AEAEAE')
+
+    if refs[6] == 1:
         canvas.itemconfig(absortion3, fill='#19EB35')
-        canvas.itemconfig(absortion4, fill='gray') 
-    
-    elif refs.count(600) == 4:
-        canvas.itemconfig(absortion1, fill='#19EB35')
-        canvas.itemconfig(absortion2, fill='#19EB35') 
-        canvas.itemconfig(absortion3, fill='#19EB35')
-        canvas.itemconfig(absortion4, fill='#19EB35') 
+    elif refs[6] == 0:
+        canvas.itemconfig(absortion3, fill='#AEAEAE')
+
+    if refs[7] == 1:
+        canvas.itemconfig(absortion4, fill='#19EB35')
+    elif refs[7] == 0:
+        canvas.itemconfig(absortion4, fill='#AEAEAE')
     
     date_time = canvas.create_text(90, 30, text=date, font=('', 10), anchor='w')
     degree = canvas.create_text(90, 50, text=str(entrophy)+'도', font=('', 10), anchor='w')
@@ -314,9 +304,7 @@ def select_date(date_index):
     
 def get_date_list():   
     try:
-        height = 18*len(date)+70
-        if height > 600:
-            height = 600
+        height = min(18*len(date)+70, 600)
 
         new_window = Toplevel(root)
         new_window.title("Select date")
@@ -345,8 +333,6 @@ def get_date_list():
 
     except NameError:
         messagebox.showwarning("파일 불러오기 오류", "파일을 먼저 선택해 주세요.")
-
-    
 
 def custom_command(*args):
     global select
