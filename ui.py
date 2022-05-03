@@ -6,6 +6,8 @@ from tkinter import filedialog
 from tkinter import messagebox
 from PIL import ImageTk, Image
 
+degree_color ={ 7: '00FF00', 7.5:'15FF00', 8:'30FF00', 8.5:'45FF00', 9:'60FF00', 9.5:'75FF00', 10:'90FF00', 10.5:'AAFF00', 11:'BBFF00', 11.5:'CCFF00', 12:'DDFF00', 12.5:'EEFF00', 13:'FFFF00', 13.5:'FFEE00', 14:'FFDD00', 14.5:'FFCC00', 15:'FFBB00', 15.5:'FFAA00', 16:'FF9000', 16.5:'FF6000', 17:'FF3000', 17.5:'FF0000'}
+
 def main():
     global canvas, root
     global date_list_box, scroll
@@ -25,44 +27,35 @@ def main():
     canvas = Canvas(root, width=w, height=h, bg="white", highlightbackground='black')
     canvas.place(x=50, y=75)
 
-    supply_pipe = [190, h/2+20, 
-                270, h/2+20, 
-                270, h-100,
-                620, h-100,
-                620, h-250,
-                660, h-250,
-                660, h-100,
-                920, h-100,
-                920, h-250,
-                960, h-250,
-                960, h-100,
-                1320, h-100,
-                1320, h-250,
-                1360, h-250,
-                1360, h-60,
+    supply_pipe = [190, 420, 
+                270, 420, 
+                270, 700,
 
-                230, h-60,
-                230, h/2+60,
-                190, h/2+60]
+                (510, 700), (510, 605), (490, 605), (490, 585), (510, 585), (510, 410), (490, 410), (490, 390), (510, 390), (510, 225), (490, 225), (490, 205), (530, 205), (530, 700),
+                (710, 700), (710, 605), (690, 605), (690, 585), (710, 585), (710, 410), (690, 410), (690, 390), (710, 390), (710, 225), (690, 225), (690, 205), (730, 205), (730, 700),
+                (910, 700), (910, 605), (890, 605), (890, 585), (910, 585), (910, 410), (890, 410), (890, 390), (910, 390), (910, 225), (890, 225), (890, 205), (930, 205), (930, 700),
+                (1110, 700), (1110, 605), (1090, 605), (1090, 585), (1110, 585), (1110, 410), (1090, 410), (1090, 390), (1110, 390), (1110, 225), (1090, 225), (1090, 205), (1130, 205), (1130, 700),
+                (1310, 700), (1310, 605), (1290, 605), (1290, 585), (1310, 585), (1310, 410), (1290, 410), (1290, 390), (1310, 390), (1310, 225), (1290, 225), (1290, 205), (1330, 205), (1330, 700),
 
-    return_pipe = [190, h/2-20, 
-                270, h/2-20, 
+                1330, 740,
+                230, 740,
+                230, 460,
+                190, 460]
+
+    return_pipe = [190, 380, 
+                270, 380, 
                 270, 100,
-                620, 100,
-                620, 250,
-                660, 250,
-                660, 100,
-                920, 100,
-                920, 250,
-                960, 250,
-                960, 100,
-                1320, 100,
-                1320, 250,
-                1360, 250,
-                1360, 60,
+
+                (350, 100), (350, 605), (390, 605), (390, 585), (370, 585), (370, 410), (390, 410), (390, 390), (370, 390), (370, 225), (390, 225), (390, 205), (370, 205), (370, 100),
+                (550, 100), (550, 605), (590, 605), (590, 585), (570, 585), (570, 410), (590, 410), (590, 390), (570, 390), (570, 225), (590, 225), (590, 205), (570, 205), (570, 100),
+                (750, 100), (750, 605), (790, 605), (790, 585), (770, 585), (770, 410), (790, 410), (790, 390), (770, 390), (770, 225), (790, 225), (790, 205), (770, 205), (770, 100),
+                (950, 100), (950, 605), (990, 605), (990, 585), (970, 585), (970, 410), (990, 410), (990, 390), (970, 390), (970, 225), (990, 225), (990, 205), (970, 205), (970, 100),
+                (1150, 100), (1150, 605), (1190, 605), (1190, 585), (1170, 585), (1170, 410), (1190, 410), (1190, 390), (1170, 390), (1170, 225), (1190, 225), (1190, 205), (1170, 205), (1170, 100),
+
+                1170, 60,
                 230, 60,
-                230, h/2-60,
-                190, h/2-60]
+                230, 340,
+                190, 340]
 
     #냉동기
     canvas.create_rectangle(30, 340, 190, 460, fill='#0099ff')
@@ -101,46 +94,61 @@ def main():
     canvas.create_rectangle(165, 480, 175, 460, fill='gray')
 
     #건물
-    canvas.create_rectangle(540, 250, 740, h-250, fill='gray')
-    canvas.create_text(640, h/2, text='건물1', font=('', 20), anchor='center')
+    # canvas.create_rectangle(540, 250, 740, h-250, fill='gray')h=800
+    canvas.create_rectangle(390, 130, 490, 280, fill='#E0E0E0')
+    canvas.create_rectangle(390, 325, 490, 475, fill='#E0E0E0')
+    canvas.create_rectangle(390, 520, 490, 670, fill='#E0E0E0')
 
-    canvas.create_rectangle(840, 250, 1040, h-250, fill='gray')
-    canvas.create_text(940, h/2, text='건물2', font=('', 20), anchor='center')
+    canvas.create_rectangle(590, 130, 690, 280, fill='#E0E0E0')
+    canvas.create_rectangle(590, 325, 690, 475, fill='#E0E0E0')
+    canvas.create_rectangle(590, 520, 690, 670, fill='#E0E0E0')
 
-    canvas.create_text(1140, h/2, text='. . .', font=('', 40), anchor='center')
+    canvas.create_rectangle(790, 130, 890, 280, fill='#E0E0E0')
+    canvas.create_rectangle(790, 325, 890, 475, fill='#E0E0E0')
+    canvas.create_rectangle(790, 520, 890, 670, fill='#E0E0E0')
 
-    canvas.create_rectangle(1240, 250, 1440, h-250, fill='gray')
-    canvas.create_text(1340, h/2, text='건물N', font=('', 20), anchor='center')
+    canvas.create_rectangle(990, 130, 1090, 280, fill='#E0E0E0')
+    canvas.create_rectangle(990, 325, 1090, 475, fill='#E0E0E0')
+    canvas.create_rectangle(990, 520, 1090, 670, fill='#E0E0E0')
+
+    canvas.create_rectangle(1190, 130, 1290, 280, fill='#E0E0E0')
+    canvas.create_rectangle(1190, 325, 1290, 475, fill='#E0E0E0')
+    canvas.create_rectangle(1190, 520, 1290, 670, fill='#E0E0E0')
+
+    for x in range(3):
+        for i in range(5):
+            canvas.create_text(440+i*200, 205+x*195, text='B{}'.format((i+1)+x*5), font=('', 10), anchor='center')
+            for j in range(1, 5):
+                canvas.create_line(390+i*200, 130+x*195+j*30, 490+i*200, 130+x*195+j*30)
 
     #파이프
     supply_pipe = canvas.create_polygon(supply_pipe, fill='white', outline='black')
     return_pipe = canvas.create_polygon(return_pipe, fill='white', outline='black')
 
-    canvas.create_text(790, 80, text='환수 파이프', font=("", 20), anchor='center')
-    canvas.create_text(790, 720, text='공급 파이프', font=("", 20), anchor='center')
+    canvas.create_text(700, 80, text='환수 파이프', font=("", 20), anchor='center')
+    canvas.create_text(700, 720, text='공급 파이프', font=("", 20), anchor='center')
 
-    #펌프
-    canvas.create_polygon([220, 495, 280, 525, 280, 495, 220, 525], fill='blue', outline='black')
-    canvas.create_text(350, 510, text='1차 펌프', font=("", 20), anchor='center')
+    # #펌프
+    # canvas.create_polygon([220, 495, 280, 525, 280, 495, 220, 525], fill='blue', outline='black')
+    # canvas.create_text(350, 510, text='1차 펌프', font=("", 20), anchor='center')
 
-    canvas.create_polygon([610, h-200, 670, h-170, 670, h-200, 610, h-170], fill='blue', outline='black')
-    canvas.create_polygon([910, h-200, 970, h-170, 970, h-200, 910, h-170], fill='blue', outline='black')
-    canvas.create_polygon([1310, h-200, 1370, h-170, 1370, h-200, 1310, h-170], fill='blue', outline='black')
-    canvas.create_text(790, h-185, text='2차 펌프', font=("", 15), anchor='center')
-
-    canvas.create_text(85, 30, text='날짜/시간 :', font=('', 10), anchor='e')
-    canvas.create_text(85, 50, text='외기 온도 :', font=('', 10), anchor='e')
-    canvas.create_text(85, 70, text='공급 온도 :', font=('', 10), anchor='e')
-    canvas.create_text(85, 90, text='환수 온도 :', font=('', 10), anchor='e')
-    canvas.create_text(5, 110, text='건물 냉방 부하 :', font=('', 10), anchor='w')
+    # canvas.create_polygon([610, h-200, 670, h-170, 670, h-200, 610, h-170], fill='blue', outline='black')
+    # canvas.create_polygon([910, h-200, 970, h-170, 970, h-200, 910, h-170], fill='blue', outline='black')
+    # canvas.create_polygon([1310, h-200, 1370, h-170, 1370, h-200, 1310, h-170], fill='blue', outline='black')
+    # canvas.create_text(790, h-185, text='2차 펌프', font=("", 15), anchor='center')
+    
+    #텍스트
+    energy_img = Image.open("energy_img.png").resize((150,150))
+    energy_img = ImageTk.PhotoImage(energy_img)
+    canvas.create_image(110, 120, image=energy_img, anchor='center')
 
     image = Image.open("green_to_red.png").resize((20, 95))
     image = ImageTk.PhotoImage(image)
 
-    canvas.create_text(1420, 20, anchor='w', text='환수 온도 색상 변화', font=("", 7))
-    canvas.create_image(1470, 30, anchor='nw',image=image)
-    canvas.create_text(1440, 35, anchor='w', text='17.0도', font=("", 7))
-    canvas.create_text(1440, 118, anchor='w', text='12.0도', font=("", 7))
+    canvas.create_text(1400, 70, text='환수 온도 색상 변화', font=("", 10) , anchor='center')
+    canvas.create_image(1400, 130, image=image, anchor='center')
+    canvas.create_text(1390, 90, text='17.0도', font=("", 7), anchor='e')
+    canvas.create_text(1390, 170, text='12.0도', font=("", 7), anchor='e')
 
     date_frame = Frame(root)
     date_frame.place(x=750, y=30, anchor='center', height=60, width=300)
@@ -155,33 +163,53 @@ def main():
     scroll.pack(side='top', fill='both')
 
     open_button = Button(root, width=7, height=1, text='파일 열기', command = open_file)
-    open_button.place(x=50, y=15)
+    open_button.place(x=970, y=45)
 
-    read_button = Button(root, width=7, height=1, text='재생', command = lambda: read_file())
+    read_button = Button(root, width=7, height=1, text='재생', command = lambda: play_file())
     read_button.place(x=910, y=20)
+
+    stop_button = Button(root, width=7, height=1, text='중지', command= stop_func)
+    stop_button.place(x=970, y=20)
 
     choice = Button(root, width=7, height=1, text='날짜 선택', command = lambda: get_date_list())
     choice.place(x=910, y=45)
     
     canvas.mainloop()
 
+def stop_func():
+    global stop
+    stop = False
+
 def set_color(line):
-    global date_time, degree, supply_degree, return_degree, rt
+    global degree, supply_degree, return_degree, rt, wf
 
     total_rt = str(line[0])
     refs = list(map(int, eval(line[1])))
     entrophy = str(line[2])
-    return_degree = float(line[3])
+    r_degree = round(float(line[3]), 2)
     date = str(line[4])
     color = 'orange'
-    if return_degree >=7 and return_degree <=12:
-        color = "#00FF11"
+
+    # alpha = ['A', 'B', 'C', 'D', 'E', 'F']
+    # integer = [i for i in range(10)]
+
+    if r_degree-round(r_degree) > 0:
+        round_d = round(r_degree)
+    else:
+        round_d = round(r_degree)
+
+    if round_d >= 17.5:
+        color = '#'+degree_color[16]
+    else:
+        color = '#'+degree_color[round_d]
+    # if r_degree >=7 and r_degree <=11:
+    #     color = "#00FF00"
     
-    elif return_degree >12 and return_degree <=15:
-        color = "yellow"
+    # elif r_degree >11 and r_degree <=15:
+    #     color = "#FFFF00"
     
-    elif return_degree > 15:
-        color = "red"
+    # elif r_degree > 15:
+    #     color = "#FF0000"
 
     if refs[0] == 1:
         canvas.itemconfig(turbor1, fill='#19EB35')
@@ -223,11 +251,25 @@ def set_color(line):
     elif refs[7] == 0:
         canvas.itemconfig(absortion4, fill='#AEAEAE')
     
-    date_time = canvas.create_text(90, 30, text=date, font=('', 10), anchor='w')
-    degree = canvas.create_text(90, 50, text=str(entrophy)+'도', font=('', 10), anchor='w')
-    supply_degree = canvas.create_text(90, 70, text='5.0도', font=('', 10), anchor='w')
-    return_degree = canvas.create_text(90, 90, text=str(return_degree)+'도', font=('', 10), anchor='w')
-    rt = canvas.create_text(105, 110, text=total_rt+'RT', font=('', 10), anchor='w')
+    # date_time = canvas.create_text(90, 30, text=date, font=('', 10), anchor='w')
+    degree = canvas.create_text(700, 20, text='외기온도:'+str(entrophy)+'도', font=('', 10), anchor='center')
+    supply_degree = []
+    return_degree = []
+    rt = []
+    wf = []
+    for i in range(3):
+        for j in range(5):
+            sd = canvas.create_text(440+j*200, 145+i*195, text='7.0도', font=('', 10), anchor='center')
+            rd = canvas.create_text(440+j*200, 175+i*195, text=str(r_degree)+'도', font=('', 10), anchor='center')
+            r = canvas.create_text(440+j*200, 235+i*195, text=total_rt+'RT', font=('', 10), anchor='center')
+            w = canvas.create_text(440+j*200, 265+i*195, text='유량 예정', font=('', 10), anchor='center')
+            supply_degree.append(sd)
+            return_degree.append(rd)
+            rt.append(r)
+            wf.append(w)
+    # supply_degree = canvas.create_text(90, 70, text='7.0도', font=('', 10), anchor='w')
+    # return_degree = canvas.create_text(90, 90, text=str(return_degree)+'도', font=('', 10), anchor='w')
+    # rt = canvas.create_text(105, 110, text=total_rt+'RT', font=('', 10), anchor='w')
 
     canvas.itemconfig(supply_pipe, fill='#0099ff')
     canvas.itemconfig(return_pipe, fill=color)
@@ -238,6 +280,7 @@ def open_file():
     global df
     global filename
     global date
+    global index
 
     filetypes = (
         ('csv files', '*.csv'),
@@ -267,24 +310,32 @@ def open_file():
 
         date_list_box.config(yscrollcommand=scroll.set)
         scroll.config(command=custom_command)
+        index = 0
 
     except:
         messagebox.showwarning("파일 불러오기 오류", "파일을 불러올 수 없습니다.")
 
-def read_file():  
+def play_file():  
     global df 
     global date_list_box
+    global stop
+    global index
+
     try:          
         df_list = df.to_numpy().tolist()
-        for i in range(date_list_box.nearest(0), len(df_list)):  
-            date_list_box.see(i)
-
+        stop=True
+        while stop:
+            date_list_box.see(max(date_list_box.nearest(0), index))
             try:
-                canvas.delete(date_time, degree, supply_degree, return_degree, rt)
+                canvas.delete(degree)
+                for s,r,t,w in zip(supply_degree, return_degree, rt, wf):
+                    canvas.delete(s,r,t,w)
             except:
-                pass      
-
-            set_color(df_list[i])
+                pass
+            set_color(df_list[max(date_list_box.nearest(0), index)])
+            index+=1
+            if index == date_list_box.size():
+                break
             time.sleep(1)
 
     except:
@@ -296,7 +347,9 @@ def select_date(date_index):
     date_list_box.see(date_index)
     select = df.loc[date_index].tolist()
     try:
-        canvas.delete(date_time, degree, supply_degree, return_degree, rt)
+        canvas.delete(degree)
+        for s,r,t,w in zip(supply_degree, return_degree, rt, wf):
+            canvas.delete(s,r,t,w)
     except:
         pass     
 
@@ -336,12 +389,16 @@ def get_date_list():
 
 def custom_command(*args):
     global select
+    global index
 
     date_list_box.yview(*args)
-    select = df.loc[date_list_box.nearest(0)].tolist()
+    index = date_list_box.nearest(0)
+    select = df.loc[index].tolist()
 
     try:
-        canvas.delete(date_time, degree, supply_degree, return_degree, rt)
+        canvas.delete(degree)
+        for s,r,t,w in zip(supply_degree, return_degree, rt, wf):
+            canvas.delete(s,r,t,w)
     except:
         pass      
     set_color(select)
