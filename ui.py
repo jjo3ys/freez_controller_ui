@@ -249,13 +249,6 @@ def main():
     canvas.create_text(100, 90, text='17.0도', font=("", 10), anchor='e')
     canvas.create_text(100, 170, text='7.0도', font=("", 10), anchor='e')
 
-    # canvas.create_text(1530, 350, text='외기온도 :', font=('', 10))
-    # canvas.create_text(1510, 380, text='기계실생산부하 :', font=('', 10))
-    # canvas.create_text(1510, 410, text='기계실환수온도 :', font=('', 10))
-    # canvas.create_text(1510, 440, text='기계실공급온도 :', font=('', 10))
-    # canvas.create_text(1530, 470, text='건물부하 :', font=('', 10))
-    # canvas.create_text(1523, 500, text='과공급부하 :', font=('', 10))
-    # canvas.create_text(1523, 530, text='저공급부하 :', font=('', 10))
     play_var = IntVar()
     x1 = Radiobutton(root, text='1배속', value=1, variable=play_var)
     x1.place(x=1450, y=20)
@@ -300,7 +293,7 @@ def stop_func():
     global stop
     stop = False
 
-def set_color(line, id):
+def set_color(line):
     global degree, supply_degree, return_degree, rt, wf, produce_rt, building_rt, over_rt, under_rt, p_return, p_supply, graph_date
     global over_graph, produce_graph, building_graph, degree_graph
 
@@ -597,7 +590,7 @@ def play_file():
                 for s,r,t,w in zip(supply_degree, return_degree, rt, wf):
                     canvas.delete(s,r,t,w)
             except:pass
-            set_color(df_list[max(date_list_box.nearest(0), index)], max(date_list_box.nearest(0), index))
+            set_color(df_list[max(date_list_box.nearest(0), index)])
             index+=1
             if index == date_list_box.size():
                 break
@@ -628,7 +621,7 @@ def select_date(date_index):
     except:
         pass     
 
-    set_color(select, index)
+    set_color(select)
     
 def get_date_list():   
     try:
@@ -681,7 +674,7 @@ def custom_command(*args):
             canvas.delete(s,r,t,w)
     except:
         pass      
-    set_color(select, index)
+    set_color(select)
 
 if __name__ == '__main__':
     main()
