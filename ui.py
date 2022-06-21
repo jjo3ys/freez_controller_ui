@@ -12,8 +12,25 @@ degree_color = {7:'000fff', 7.5:'004fff', 8:'008fff', 8.5:'00bfff', 9:'00dfff', 
 
 p_x = 210
 p_y = 420
-window_x = 2250
+window_x = 1480
 window_y = 925
+class ResizingCanvas(Canvas):
+    def __init__(self,parent,**kwargs):
+        Canvas.__init__(self,parent,**kwargs)
+        self.bind("<Configure>", self.on_resize)
+        self.height = self.winfo_reqheight()
+        self.width = self.winfo_reqwidth()
+
+    def on_resize(self,event):
+        # determine the ratio of old width/height to new width/height
+        wscale = float(event.width)/self.width
+        hscale = float(event.height)/self.height
+        self.width = event.width
+        self.height = event.height
+        # resize the canvas 
+        self.config(width=self.width, height=self.height)
+        # rescale all the objects tagged with the "all" tag
+        self.scale("all",0,0,wscale,hscale)
 
 def main():
     global canvas, root, supply_graph_canvas, degree_graph_canvas, produced_graph_canvas, building_graph_canvas, electric_graph_canvas, effciency_graph_canvas, norm, bold
@@ -25,27 +42,106 @@ def main():
 
     root = Tk()
     root.title("Energy ui")
-    root.resizable(False, False)
+    root.resizable(True, True)
     root.iconbitmap('inu.ico')
     root.geometry('{}x{}'.format(window_x, window_y))
     # root.config(bg='#4E4E4E')
-    label = Label(root, text='designed by Yeon-Seong Jo', font=('', 8))
-    label.place(x=window_x-45, y=55, anchor='e')
-    label = Label(root, text='Industrial Inteligence Lab', font=('', 15, 'bold'), foreground='#000000')#00B3FF
-    label.place(x=window_x-45, y=25, anchor='e')
-    
-    w = 2150
+        
+    w = 1375
     h = 800
     
-    canvas = Canvas(root, width=w, height=h, bg="white", highlightbackground='black')
-    canvas.place(x=50, y=75)
-    #저, 과공급 그래프
-    canvas.create_text(w-205, h-790, text='저·과 공급 그래프', font=('', 12, 'bold'))
-    canvas.create_text(w-385, h-430, text='과공급 냉방부하(RT) : ', font=('', 10), anchor='w')
-    canvas.create_text(w-385, h-410, text='저공급 냉방부하(RT) : ', font=('', 10), anchor='w')
+    bold = font.Font(size=10, weight="bold")
+    norm = font.Font(size=10, weight='normal')
+    
+    Label(root).pack()
 
-    supply_graph_canvas = Canvas(canvas, width=360, height=240, bg="white", highlightbackground='black')
-    supply_graph_canvas.place(x=w-385, y=h-780)
+    frame1 = Frame(root)
+    frame1.pack(fill='x')
+
+    frame4 = Frame(frame1)
+    frame4.pack(side='right')
+
+    Label(frame4, text='Industrial Inteligence Lab', font=('', 15, 'bold'), foreground='#000000').pack(side='top', anchor='ne', padx=25)#00B3FF
+    Label(frame4, text='designed by Yeon-Seong Jo', font=('', 8)).pack(side='top', anchor='ne', padx=25)
+
+    Label(frame1, width=5).pack(side='right')
+
+    frame3 = Frame(frame1)
+    frame3.pack(side='right')
+    frame3_1 = Frame(frame3)
+    frame3_1.pack()
+    frame3_2 = Frame(frame3)
+    frame3_2.pack()
+    
+    play_var = IntVar()
+    x1 = Radiobutton(frame3_1, text='1배속', value=1, variable=play_var)
+    x1.pack(side='left')
+    
+    x1.select()
+    x3 = Radiobutton(frame3_1, text='3배속', value=3, variable=play_var)
+    x3.pack(side='left')
+    
+    x5 = Radiobutton(frame3_2, text='5배속', value=5, variable=play_var)
+    x5.pack(side='left')
+    
+    x10 = Radiobutton(frame3_2, text='10배속', value=10, variable=play_var)
+    x10.pack(side='left')
+    
+    Label(frame1, width=5).pack(side='right')
+
+    frame2 = Frame(frame1)
+    frame2.pack(side='right')
+    frame2_1 = Frame(frame2)
+    frame2_1.pack()
+    frame2_2 = Frame(frame2)
+    frame2_2.pack()
+
+    read_button = Button(frame2_1, width=7, height=1, text='재생', command = lambda: play_file())
+    read_button.pack(side='left')
+
+    stop_button = Button(frame2_1, width=7, height=1, text='중지', command= stop_func)
+    stop_button.pack(side='left')
+
+    open_button = Button(frame2_2, width=7, height=1, text='파일 열기', command = open_file)
+    open_button.pack(side='left')
+
+    choice = Button(frame2_2, width=7, height=1, text='날짜 선택', command = lambda: get_date_list())
+    choice.pack(side='left')
+
+    Label(frame1, width=5).pack(side='right')
+
+    date_frame = Frame(frame1)
+    date_frame.pack(side='right')
+    text_ = Label(date_frame, text='날짜/시간', width=20, height=1)
+    text_.pack(side='top')
+    
+    date_list_box = Listbox(date_frame, height=1, width=20)
+    date_list_box.pack(side='top')
+
+    scroll = Scrollbar(date_frame, orient='horizontal')
+    scroll.pack(side='top', fill='both')
+
+    Label(frame1, width=5).pack(side='right', fill='x')
+
+    canvas = ResizingCanvas(root, width=w, height=h, bg="white", highlightbackground='black')
+    canvas.pack(side='bottom', anchor='center',fill=BOTH, expand=YES, padx='25', pady='25')
+    # canvas.place(x=50, y=75)
+
+    graph_window = Toplevel(root)
+    graph_window.title("Graph")
+    graph_window.iconbitmap('inu.ico')
+    graph_window.resizable(False, False)
+    graph_window.geometry('820x860')
+
+    graph_canvas = Canvas(graph_window, width=780, height=820, bg='white', highlightbackground='black')
+    graph_canvas.place(x=410, y=430, anchor='center')
+    #저, 과공급 그래프
+    graph_canvas.create_text(200, 15, text='저·과 공급 그래프', font=('', 12, 'bold'))
+    # canvas.create_text(w-385, h-430, text='과공급 냉방부하(RT) : ', font=('', 10), anchor='w')
+    # canvas.create_text(w-385, h-410, text='저공급 냉방부하(RT) : ', font=('', 10), anchor='w')
+
+    supply_graph_canvas = Canvas(graph_canvas, width=360, height=240, bg="white", highlightbackground='black')
+    supply_graph_canvas.place(x=20, y=30)
 
     supply_graph_canvas.create_line(10, 5, 10, 235)
     supply_graph_canvas.create_text(23, 10, text='RT', font=('', 10))
@@ -62,11 +158,11 @@ def main():
     supply_graph_canvas.create_text(180, 180, text='저공급', fill='gray', font=('', 15))
 
     #외기온도 그래프
-    canvas.create_text(w-595, h-790, text='외기온도 그래프', font=('', 12, 'bold'))
-    canvas.create_text(w-770, h-430, text='외기온도 : ', font=('', 10), anchor='w')
+    graph_canvas.create_text(560, 15, text='외기온도 그래프', font=('', 12, 'bold'))
+    # canvas.create_text(w-770, h-430, text='외기온도 : ', font=('', 10), anchor='w')
 
-    degree_graph_canvas = Canvas(canvas, width=360, height=240, bg='white', highlightbackground='black')
-    degree_graph_canvas.place(x=w-770, y=h-780)
+    degree_graph_canvas = Canvas(graph_canvas, width=360, height=240, bg='white', highlightbackground='black')
+    degree_graph_canvas.place(x=400, y=30)
 
     degree_graph_canvas.create_line(5, 220, 355, 220)
     degree_graph_canvas.create_text(335, 210, text='시간(h)', font=('', 10))
@@ -84,11 +180,11 @@ def main():
 
 
     #생산부하 그래프
-    canvas.create_text(w-595, h-525, text='생산부하 그래프', font=('', 12, 'bold'))
-    canvas.create_text(w-770, h-80, text='총 생산 냉방부하(RT) : ', font=('', 10), anchor='w')
+    graph_canvas.create_text(200, 285, text='생산부하 그래프', font=('', 12, 'bold'))
+    # canvas.create_text(w-770, h-80, text='총 생산 냉방부하(RT) : ', font=('', 10), anchor='w')
 
-    produced_graph_canvas = Canvas(canvas, width=360, height=240, bg='white', highlightbackground='black')
-    produced_graph_canvas.place(x=w-770, y=h-515)
+    produced_graph_canvas = Canvas(graph_canvas, width=360, height=240, bg='white', highlightbackground='black')
+    produced_graph_canvas.place(x=20, y=300)
 
     produced_graph_canvas.create_line(5, 220, 355, 220)
     produced_graph_canvas.create_text(335, 210, text='시간(h)', font=('', 10))
@@ -102,10 +198,10 @@ def main():
     produced_graph_canvas.create_text(35, 10, text='RT', font=('', 10))
         
     #건물부하 그래프
-    canvas.create_text(w-205, h-525, text='건물부하 그래프', font=('', 12, 'bold'))
+    graph_canvas.create_text(560, 285, text='건물부하 그래프', font=('', 12, 'bold'))
 
-    building_graph_canvas = Canvas(canvas, width=360, height=240, bg='white', highlightbackground='black')
-    building_graph_canvas.place(x=w-385, y=h-515)
+    building_graph_canvas = Canvas(graph_canvas, width=360, height=240, bg='white', highlightbackground='black')
+    building_graph_canvas.place(x=400, y=300)
 
     building_graph_canvas.create_line(5, 220, 355, 220)
     building_graph_canvas.create_text(335, 210, text='시간(h)', font=('', 10))
@@ -119,10 +215,10 @@ def main():
     building_graph_canvas.create_text(35, 10, text='RT', font=('', 10))
 
     #전력 사용량 그래프
-    canvas.create_text(w-205, h-260, text='누적 전력 사용량 그래프', font=('', 12, 'bold'))
+    graph_canvas.create_text(200, 555, text='누적 전력 사용량 그래프', font=('', 12, 'bold'))
 
-    electric_graph_canvas = Canvas(canvas, width=360, height=240, bg='white', highlightbackground='black')
-    electric_graph_canvas.place(x=w-385, y=h-250)
+    electric_graph_canvas = Canvas(graph_canvas, width=360, height=240, bg='white', highlightbackground='black')
+    electric_graph_canvas.place(x=20, y=570)
 
     electric_graph_canvas.create_line(5, 220, 355, 220)
     electric_graph_canvas.create_text(335, 210, text='시간(h)', font=('', 10))
@@ -136,10 +232,10 @@ def main():
     electric_graph_canvas.create_text(35, 10, text='KW/h', font=('', 10))#1KW=860Kcal, 1 RT = 3,024 Kcal/h 1 RT = 3.51628 KW/h
 
     #효율 그래프
-    canvas.create_text(w-595, h-260, text='효율 그래프', font=('', 12, 'bold'))
+    graph_canvas.create_text(560, 555, text='효율 그래프', font=('', 12, 'bold'))
 
-    effciency_graph_canvas = Canvas(canvas, width=360, height=240, bg='white', highlightbackground='black')
-    effciency_graph_canvas.place(x=w-770, y=h-250)
+    effciency_graph_canvas = Canvas(graph_canvas, width=360, height=240, bg='white', highlightbackground='black')
+    effciency_graph_canvas.place(x=400, y=570)
 
     effciency_graph_canvas.create_arc(20, 50, 340, 370, start=144, extent=36, fill='red', outline='white', width=3)
     effciency_graph_canvas.create_text(75, 180, text='5등급', font=('',10,'bold'), anchor='center')
@@ -288,44 +384,6 @@ def main():
     canvas.create_image(110, 130, image=image, anchor='center')
     canvas.create_text(100, 90, text='17.0도', font=("", 10), anchor='e')
     canvas.create_text(100, 170, text='7.0도', font=("", 10), anchor='e')
-
-    play_var = IntVar()
-    x1 = Radiobutton(root, text='1배속', value=1, variable=play_var)
-    x1.place(x=1450, y=20)
-    x1.select()
-    x3 = Radiobutton(root, text='3배속', value=3, variable=play_var)
-    x3.place(x=1520, y=20)
-    x5 = Radiobutton(root, text='5배속', value=5, variable=play_var)
-    x5.place(x=1450, y=45)
-    x10 = Radiobutton(root, text='10배속', value=10, variable=play_var)
-    x10.place(x=1520, y=45)
-
-    date_frame = Frame(root)
-    date_frame.place(x=1160, y=30, anchor='center', height=60, width=300)
-    
-    text_ = Label(date_frame, text='날짜/시간', width=20, height=1)
-    text_.pack(side='top')
-    
-    date_list_box = Listbox(date_frame, height=1, width=20)
-    date_list_box.pack(side='top')
-
-    scroll = Scrollbar(date_frame, orient='horizontal')
-    scroll.pack(side='top', fill='both')
-
-    open_button = Button(root, width=7, height=1, text='파일 열기', command = open_file)
-    open_button.place(x=1380, y=45)
-
-    read_button = Button(root, width=7, height=1, text='재생', command = lambda: play_file())
-    read_button.place(x=1320, y=20)
-
-    stop_button = Button(root, width=7, height=1, text='중지', command= stop_func)
-    stop_button.place(x=1380, y=20)
-
-    choice = Button(root, width=7, height=1, text='날짜 선택', command = lambda: get_date_list())
-    choice.place(x=1320, y=45)
-
-    bold = font.Font(size=10, weight="bold")
-    norm = font.Font(size=10, weight='normal')
     
     canvas.mainloop()
 
@@ -339,7 +397,7 @@ def set_color(line):
 
     total_rt = line[0]
     refs = list(map(int, eval(line[1])))
-    entrophy = str(line[2])
+    # entrophy = str(line[2])
     r_degree = round(float(line[3]), 2)
     s_degree = round(float(line[4]), 2)
     date = str(line[5]).split(' ')[0]
@@ -475,19 +533,19 @@ def set_color(line):
         canvas.itemconfig(absortion4, text='OFF')
         canvas.itemconfig(absortion4_b, fill='red')
 
-    if produced>=total_rt:
-        over = round(produced-total_rt,2)
-        under = 0.0
-    else:
-        over = 0.0
-        under = round(total_rt-produced,2)
+    # if produced>=total_rt:
+    #     over = round(produced-total_rt,2)
+    #     under = 0.0
+    # else:
+    #     over = 0.0
+    #     under = round(total_rt-produced,2)
     
-    degree = canvas.create_text(w-700, h-430, text=str(entrophy)+'도', font=('', 10), anchor='w')
-    produce_rt = canvas.create_text(w-620, h-80, text=str(produced)+'RT', font=('', 10), anchor='w')
+    # degree = canvas.create_text(w-700, h-430, text=str(entrophy)+'도', font=('', 10), anchor='w')
+    # produce_rt = canvas.create_text(w-620, h-80, text=str(produced)+'RT', font=('', 10), anchor='w')
     
-    building_rt = canvas.create_text(w-235, h-80, text=str(total_rt)+'RT', font=('', 10), anchor='w')
-    over_rt = canvas.create_text(w-245, h-430, text=str(over)+'RT', font=('', 10), anchor='w')
-    under_rt = canvas.create_text(w-245, h-410, text=str(under)+'RT', font=('', 10), anchor='w')
+    # building_rt = canvas.create_text(w-235, h-80, text=str(total_rt)+'RT', font=('', 10), anchor='w')
+    # over_rt = canvas.create_text(w-245, h-430, text=str(over)+'RT', font=('', 10), anchor='w')
+    # under_rt = canvas.create_text(w-245, h-410, text=str(under)+'RT', font=('', 10), anchor='w')
 
     p_return = canvas.create_text(p_x+520, p_y-340, text='환수 온도 : '+str(r_degree)+'도', font=('', 12, 'bold'), anchor='w')
     p_supply = canvas.create_text(p_x+510, p_y+300, text='공급 온도 : '+str(s_degree)+'도', font=('', 12, 'bold'), anchor='w')
@@ -656,7 +714,8 @@ def play_file():
                 electric_graph_canvas.delete(electric_graph)
             except:pass
             try:
-                canvas.delete(degree, produce_rt, building_rt, over_rt, under_rt, p_return, p_supply)
+                canvas.delete(p_return, p_supply)
+                # canvas.delete(degree, produce_rt, building_rt, over_rt, under_rt, p_return, p_supply)
                 for s,r,t,w in zip(supply_degree, return_degree, rt, wf):
                     canvas.delete(s,r,t,w)
             except:pass
@@ -686,7 +745,8 @@ def select_date(date_index):
         electric_graph_canvas.delete(electric_graph)
     except:pass
     try:
-        canvas.delete(degree, produce_rt, building_rt, over_rt, under_rt, p_return, p_supply)
+        canvas.delete(p_return, p_supply)
+        # canvas.delete(degree, produce_rt, building_rt, over_rt, under_rt, p_return, p_supply)
         for s,r,t,w in zip(supply_degree, return_degree, rt, wf):
             canvas.delete(s,r,t,w)
     except:
@@ -741,7 +801,8 @@ def custom_command(*args):
         electric_graph_canvas.delete(electric_graph)
     except:pass
     try:
-        canvas.delete(degree, produce_rt, building_rt, over_rt, under_rt, p_return, p_supply)
+        canvas.delete(p_return, p_supply)
+        # canvas.delete(degree, produce_rt, building_rt, over_rt, under_rt, p_return, p_supply)
         for s,r,t,w in zip(supply_degree, return_degree, rt, wf):
             canvas.delete(s,r,t,w)
     except:
