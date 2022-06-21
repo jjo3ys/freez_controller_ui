@@ -14,23 +14,21 @@ p_x = 210
 p_y = 420
 window_x = 1480
 window_y = 925
+
 class ResizingCanvas(Canvas):
-    def __init__(self,parent,**kwargs):
+    def __init__(self, parent, **kwargs):
         Canvas.__init__(self,parent,**kwargs)
         self.bind("<Configure>", self.on_resize)
         self.height = self.winfo_reqheight()
         self.width = self.winfo_reqwidth()
 
-    def on_resize(self,event):
-        # determine the ratio of old width/height to new width/height
+    def on_resize(self, event):
         wscale = float(event.width)/self.width
         hscale = float(event.height)/self.height
         self.width = event.width
         self.height = event.height
-        # resize the canvas 
         self.config(width=self.width, height=self.height)
-        # rescale all the objects tagged with the "all" tag
-        self.scale("all",0,0,wscale,hscale)
+        self.scale("all", 0, 0, wscale, hscale)
 
 def main():
     global canvas, root, supply_graph_canvas, degree_graph_canvas, produced_graph_canvas, building_graph_canvas, electric_graph_canvas, effciency_graph_canvas, norm, bold
@@ -39,6 +37,7 @@ def main():
     global turbor1, turbor2, turbor3, turbor4, turbor1_b, turbor2_b, turbor3_b, turbor4_b
     global return_pipe, supply_pipe
     global w, h
+    global return_list, supply_list, building_rt_list, p_supply, p_return
 
     root = Tk()
     root.title("Energy ui")
@@ -125,7 +124,6 @@ def main():
 
     canvas = ResizingCanvas(root, width=w, height=h, bg="white", highlightbackground='black')
     canvas.pack(side='bottom', anchor='center',fill=BOTH, expand=YES, padx='25', pady='25')
-    # canvas.place(x=50, y=75)
 
     graph_window = Toplevel(root)
     graph_window.title("Graph")
@@ -137,8 +135,6 @@ def main():
     graph_canvas.place(x=410, y=430, anchor='center')
     #저, 과공급 그래프
     graph_canvas.create_text(200, 15, text='저·과 공급 그래프', font=('', 12, 'bold'))
-    # canvas.create_text(w-385, h-430, text='과공급 냉방부하(RT) : ', font=('', 10), anchor='w')
-    # canvas.create_text(w-385, h-410, text='저공급 냉방부하(RT) : ', font=('', 10), anchor='w')
 
     supply_graph_canvas = Canvas(graph_canvas, width=360, height=240, bg="white", highlightbackground='black')
     supply_graph_canvas.place(x=20, y=30)
@@ -159,7 +155,6 @@ def main():
 
     #외기온도 그래프
     graph_canvas.create_text(560, 15, text='외기온도 그래프', font=('', 12, 'bold'))
-    # canvas.create_text(w-770, h-430, text='외기온도 : ', font=('', 10), anchor='w')
 
     degree_graph_canvas = Canvas(graph_canvas, width=360, height=240, bg='white', highlightbackground='black')
     degree_graph_canvas.place(x=400, y=30)
@@ -181,7 +176,6 @@ def main():
 
     #생산부하 그래프
     graph_canvas.create_text(200, 285, text='생산부하 그래프', font=('', 12, 'bold'))
-    # canvas.create_text(w-770, h-80, text='총 생산 냉방부하(RT) : ', font=('', 10), anchor='w')
 
     produced_graph_canvas = Canvas(graph_canvas, width=360, height=240, bg='white', highlightbackground='black')
     produced_graph_canvas.place(x=20, y=300)
@@ -287,7 +281,6 @@ def main():
                 p_x, p_y-80]
 
     #건물
-    # canvas.create_rectangle(540, 250, 740, h-250, fill='gray')h=800
     canvas.create_rectangle(p_x+200, p_y-290, p_x+300, p_y-140, fill='#E0E0E0')
     canvas.create_rectangle(p_x+200, p_y-95, p_x+300, p_y+55, fill='#E0E0E0')
     canvas.create_rectangle(p_x+200, p_y+100, p_x+300, p_y+250, fill='#E0E0E0')
@@ -308,22 +301,32 @@ def main():
     canvas.create_rectangle(p_x+1000, p_y-95, p_x+1100, p_y+55, fill='#E0E0E0')
     canvas.create_rectangle(p_x+1000, p_y+100, p_x+1100, p_y+250, fill='#E0E0E0')
 
-
     dong = ['대학본부', '정보전산원', '자연대', '도서관', '공동실험실습관', '공대', '정보대', '인문대', '복지회관', '예체대', '학생복지회관', '컨벤션', '사회대법대', '동북아경영', '교수회관']
+
+    supply_list = []
+    return_list = []
+    building_rt_list = []
+
     for x in range(3):
         for i in range(5):
+            s = canvas.create_text(p_x+250+i*200, p_y-275+x*195, text='', font=('', 10), anchor='center')
+            r = canvas.create_text(p_x+250+i*200, p_y-245+x*195, text='', font=('', 10), anchor='center')
+            b = canvas.create_text(p_x+250+i*200, p_y-185+x*195, text='', font=('', 10), anchor='center')           
             canvas.create_text(p_x+250+i*200, p_y-215+x*195, text=dong[i+x*5], font=('', 10), anchor='center')
+            canvas.create_text(p_x+250+i*200, p_y-155+x*195, text='유량 (예정)', font=('', 10), anchor='center')
+
+            supply_list.append(s)
+            return_list.append(r)
+            building_rt_list.append(b)
+
             for j in range(1, 5):
                 canvas.create_line(p_x+200+i*200, p_y-290+x*195+j*30, p_x+300+i*200, p_y-290+x*195+j*30)
-
     #파이프
     supply_pipe = canvas.create_polygon(supply_pipe, fill='white', outline='blue', width=5)
     return_pipe = canvas.create_polygon(return_pipe, fill='white', outline='orange', width=5)
+    p_return = canvas.create_text(p_x+520, p_y-340, text='환수 온도 : 도', font=('', 12, 'bold'), anchor='w')
+    p_supply = canvas.create_text(p_x+520, p_y+295, text='공급 온도 : 도', font=('', 12, 'bold'), anchor='w')
 
-    # canvas.create_text(p_x+490, p_y-340, text='환수 배관', font=("", 20), anchor='center')
-    # canvas.create_text(p_x+490, p_y+300, text='공급 배관', font=("", 20), anchor='center')
-
-    
     #냉동기 이미지
     ref = Image.open('refrigerator2.png')
     ref600 = ref.resize((80, 50))
@@ -421,12 +424,15 @@ def set_color(line):
         electric_plots.append([20, 220])
 
     for i in range(t):
-        over_plots.append([3.325*i+10, 120+day_of_over[date][i]/supply_max*100])
-        produce_plots.append([3.325*i+20, 220-day_of_produce[date][i]/produce_max*200])
-        builidng_plots.append([3.325*i+20, 220-day_of_building[date][i]/building_max*200])
-        degree_plots.append([3.325*i+20, 220-day_of_degree[date][i]/35*175])    
-        electric_plots.append([3.325*i+20, 220-sum(day_of_produce[date][:i])*3.51628/electric_max*200])
-
+        try:
+            over_plots.append([3.325*i+10, 120+day_of_over[date][i]/supply_max*100])
+            produce_plots.append([3.325*i+20, 220-day_of_produce[date][i]/produce_max*200])
+            builidng_plots.append([3.325*i+20, 220-day_of_building[date][i]/building_max*200])
+            degree_plots.append([3.325*i+20, 220-day_of_degree[date][i]/35*175])    
+            electric_plots.append([3.325*i+20, 220-sum(day_of_produce[date][:i])*3.51628/electric_max*200])
+        except:
+            pass
+        
     electric_plots.append([20+320*(t-1)/96, 220])
     electric_plots.append([20, 220])
 
@@ -546,9 +552,8 @@ def set_color(line):
     # building_rt = canvas.create_text(w-235, h-80, text=str(total_rt)+'RT', font=('', 10), anchor='w')
     # over_rt = canvas.create_text(w-245, h-430, text=str(over)+'RT', font=('', 10), anchor='w')
     # under_rt = canvas.create_text(w-245, h-410, text=str(under)+'RT', font=('', 10), anchor='w')
-
-    p_return = canvas.create_text(p_x+520, p_y-340, text='환수 온도 : '+str(r_degree)+'도', font=('', 12, 'bold'), anchor='w')
-    p_supply = canvas.create_text(p_x+510, p_y+300, text='공급 온도 : '+str(s_degree)+'도', font=('', 12, 'bold'), anchor='w')
+    canvas.itemconfig(p_return, text='환수 온도 : '+str(r_degree)+'도')
+    canvas.itemconfig(p_supply, text='공급 온도 : '+str(s_degree)+'도')
 
     supply_degree = []
     return_degree = []
@@ -556,14 +561,13 @@ def set_color(line):
     wf = []
     for i in range(3):
         for j in range(5):
-            sd = canvas.create_text(p_x+250+j*200, p_y-275+i*195, text=str(s_degree)+'도', font=('', 10), anchor='center')
-            rd = canvas.create_text(p_x+250+j*200, p_y-245+i*195, text=str(r_degree)+'도', font=('', 10), anchor='center')
-            r = canvas.create_text(p_x+250+j*200, p_y-185+i*195, text=str(total_rt)+'RT', font=('', 10), anchor='center')
-            watter = canvas.create_text(p_x+250+j*200, p_y-155+i*195, text='유량 (예정)', font=('', 10), anchor='center')
-            supply_degree.append(sd)
-            return_degree.append(rd)
-            rt.append(r)
-            wf.append(watter)
+            s = supply_list[i*5+j]
+            r = return_list[i*5+j]
+            b = building_rt_list[i*5+j]
+
+            canvas.itemconfig(s, text=str(s_degree)+'도')
+            canvas.itemconfig(r, text=str(r_degree)+'도')
+            canvas.itemconfig(b, text=str(total_rt)+'도')
 
     canvas.itemconfig(supply_pipe, fill=s_color)
     canvas.itemconfig(return_pipe, fill=r_color)
@@ -583,7 +587,7 @@ def open_file():
         ('excel files', '*.xlsx'),
         ('all files', '*.*')
     )
-    try:
+    try:  
 
         try:
             for p, b, e in zip(produce_list, building_list, electric_list):
@@ -692,7 +696,8 @@ def open_file():
         date_list_box.config(yscrollcommand=scroll.set)
         scroll.config(command=custom_command)
         index = 0
-
+        df_list = df.to_numpy().tolist()
+        set_color(df_list[max(date_list_box.nearest(0), index)])
     except:
         messagebox.showwarning("파일 불러오기 오류", "파일을 불러올 수 없습니다.")
 
@@ -713,12 +718,6 @@ def play_file():
                 degree_graph_canvas.delete(degree_graph)
                 electric_graph_canvas.delete(electric_graph)
             except:pass
-            try:
-                canvas.delete(p_return, p_supply)
-                # canvas.delete(degree, produce_rt, building_rt, over_rt, under_rt, p_return, p_supply)
-                for s,r,t,w in zip(supply_degree, return_degree, rt, wf):
-                    canvas.delete(s,r,t,w)
-            except:pass
             set_color(df_list[max(date_list_box.nearest(0), index)])
             index+=1
             if index == date_list_box.size():
@@ -728,8 +727,8 @@ def play_file():
     except tkinter.TclError:
         pass
 
-    except:
-        messagebox.showwarning("파일 불러오기 오류", "파일을 먼저 선택해 주세요.")              
+    # except:
+    #     messagebox.showwarning("파일 불러오기 오류", "파일을 먼저 선택해 주세요.")              
             
 def select_date(date_index):
     global select, index
@@ -743,14 +742,7 @@ def select_date(date_index):
         building_graph_canvas.delete(building_graph)
         degree_graph_canvas.delete(degree_graph)
         electric_graph_canvas.delete(electric_graph)
-    except:pass
-    try:
-        canvas.delete(p_return, p_supply)
-        # canvas.delete(degree, produce_rt, building_rt, over_rt, under_rt, p_return, p_supply)
-        for s,r,t,w in zip(supply_degree, return_degree, rt, wf):
-            canvas.delete(s,r,t,w)
-    except:
-        pass     
+    except:pass  
 
     set_color(select)
     
@@ -800,13 +792,7 @@ def custom_command(*args):
         degree_graph_canvas.delete(degree_graph)
         electric_graph_canvas.delete(electric_graph)
     except:pass
-    try:
-        canvas.delete(p_return, p_supply)
-        # canvas.delete(degree, produce_rt, building_rt, over_rt, under_rt, p_return, p_supply)
-        for s,r,t,w in zip(supply_degree, return_degree, rt, wf):
-            canvas.delete(s,r,t,w)
-    except:
-        pass      
+     
     set_color(select)
 
 if __name__ == '__main__':
