@@ -1,4 +1,5 @@
 import time
+import math
 from tkinter import font
 import pandas as pd
 import tkinter
@@ -14,6 +15,37 @@ p_x = 210
 p_y = 420
 window_x = 1480
 window_y = 925
+
+#파이프
+supply_pipe = [p_x, p_y, 
+            p_x+80, p_y, 
+            p_x+80, p_y+280,
+
+            (p_x+320, p_y+280), (p_x+320, p_y+185), (p_x+300, p_y+185), (p_x+300, p_y+165), (p_x+320, p_y+165), (p_x+320, p_y-10), (p_x+300, p_y-10), (p_x+300, p_y-30), (p_x+320, p_y-30), (p_x+320, p_y-205), (p_x+300, p_y-205), (p_x+300, p_y-225), (p_x+340, p_y-225), (p_x+340, p_y+280),
+            (p_x+520, p_y+280), (p_x+520, p_y+185), (p_x+500, p_y+185), (p_x+500, p_y+165), (p_x+520, p_y+165), (p_x+520, p_y-10), (p_x+500, p_y-10), (p_x+500, p_y-30), (p_x+520, p_y-30), (p_x+520, p_y-205), (p_x+500, p_y-205), (p_x+500, p_y-225), (p_x+540, p_y-225), (p_x+540, p_y+280),
+            (p_x+720, p_y+280), (p_x+720, p_y+185), (p_x+700, p_y+185), (p_x+700, p_y+165), (p_x+720, p_y+165), (p_x+720, p_y-10), (p_x+700, p_y-10), (p_x+700, p_y-30), (p_x+720, p_y-30), (p_x+720, p_y-205), (p_x+700, p_y-205), (p_x+700, p_y-225), (p_x+740, p_y-225), (p_x+740, p_y+280),
+            (p_x+920, p_y+280), (p_x+920, p_y+185), (p_x+900, p_y+185), (p_x+900, p_y+165), (p_x+920, p_y+165), (p_x+920, p_y-10), (p_x+900, p_y-10), (p_x+900, p_y-30), (p_x+920, p_y-30), (p_x+920, p_y-205), (p_x+900, p_y-205), (p_x+900, p_y-225), (p_x+940, p_y-225), (p_x+940, p_y+280),
+            (p_x+1120, p_y+280), (p_x+1120, p_y+185), (p_x+1100, p_y+185), (p_x+1100, p_y+165), (p_x+1120, p_y+165), (p_x+1120, p_y-10), (p_x+1100, p_y-10), (p_x+1100, p_y-30), (p_x+1120, p_y-30), (p_x+1120, p_y-205), (p_x+1100, p_y-205), (p_x+1100, p_y-225), (p_x+1140, p_y-225), (p_x+1140, p_y+280),
+
+            p_x+1140, p_y+320,
+            p_x+40, p_y+320,
+            p_x+40, p_y+40,
+            p_x, p_y+40]
+
+return_pipe = [p_x, p_y-40, 
+            p_x+80, p_y-40, 
+            p_x+80, p_y-320,
+
+            (p_x+160, p_y-320), (p_x+160, p_y+185), (p_x+200, p_y+185), (p_x+200, p_y+165), (p_x+180, p_y+165), (p_x+180, p_y-10), (p_x+200, p_y-10), (p_x+200, p_y-30), (p_x+180, p_y-30), (p_x+180, p_y-205), (p_x+200, p_y-205), (p_x+200, p_y-225), (p_x+180, p_y-225), (p_x+180, p_y-320),
+            (p_x+360, p_y-320), (p_x+360, p_y+185), (p_x+400, p_y+185), (p_x+400, p_y+165), (p_x+380, p_y+165), (p_x+380, p_y-10), (p_x+400, p_y-10), (p_x+400, p_y-30), (p_x+380, p_y-30), (p_x+380, p_y-205), (p_x+400, p_y-205), (p_x+400, p_y-225), (p_x+380, p_y-225), (p_x+380, p_y-320),
+            (p_x+560, p_y-320), (p_x+560, p_y+185), (p_x+600, p_y+185), (p_x+600, p_y+165), (p_x+580, p_y+165), (p_x+580, p_y-10), (p_x+600, p_y-10), (p_x+600, p_y-30), (p_x+580, p_y-30), (p_x+580, p_y-205), (p_x+600, p_y-205), (p_x+600, p_y-225), (p_x+580, p_y-225), (p_x+580, p_y-320),
+            (p_x+760, p_y-320), (p_x+760, p_y+185), (p_x+800, p_y+185), (p_x+800, p_y+165), (p_x+780, p_y+165), (p_x+780, p_y-10), (p_x+800, p_y-10), (p_x+800, p_y-30), (p_x+780, p_y-30), (p_x+780, p_y-205), (p_x+800, p_y-205), (p_x+800, p_y-225), (p_x+780, p_y-225), (p_x+780, p_y-320),
+            (p_x+960, p_y-320), (p_x+960, p_y+185), (p_x+1000, p_y+185), (p_x+1000, p_y+165), (p_x+980, p_y+165), (p_x+980, p_y-10), (p_x+1000, p_y-10), (p_x+1000, p_y-30), (p_x+980, p_y-30), (p_x+980, p_y-205), (p_x+1000, p_y-205), (p_x+1000, p_y-225), (p_x+980, p_y-225), (p_x+980, p_y-320),
+
+            p_x+980, p_y-360,
+            p_x+40, p_y-360,
+            p_x+40, p_y-80,
+            p_x, p_y-80]
 
 class ResizingCanvas(Canvas):
     def __init__(self, parent, **kwargs):
@@ -35,15 +67,19 @@ def main():
     global date_list_box, scroll, play_var
     global absortion1, absortion2, absortion3, absortion4, absortion1_b, absortion2_b, absortion3_b, absortion4_b
     global turbor1, turbor2, turbor3, turbor4, turbor1_b, turbor2_b, turbor3_b, turbor4_b
-    global return_pipe, supply_pipe
+    global return_pipe, supply_pipe, arrow
     global w, h
     global return_list, supply_list, building_rt_list, p_supply, p_return
 
     root = Tk()
+
+    window_x = root.winfo_screenwidth()
+    window_y = root.winfo_screenheight()-200
+
     root.title("Energy ui")
     root.resizable(True, True)
     root.iconbitmap('inu.ico')
-    root.geometry('{}x{}'.format(window_x, window_y))
+    root.geometry('{}x{}+{}+{}'.format(int(window_x/3*2), int(window_y), 50, 50))
     # root.config(bg='#4E4E4E')
         
     w = 1375
@@ -129,7 +165,7 @@ def main():
     graph_window.title("Graph")
     graph_window.iconbitmap('inu.ico')
     graph_window.resizable(False, False)
-    graph_window.geometry('820x860')
+    graph_window.geometry('820x860+{}+{}'.format(int(window_x/3*2+70), 50))
 
     graph_canvas = Canvas(graph_window, width=780, height=820, bg='white', highlightbackground='black')
     graph_canvas.place(x=410, y=430, anchor='center')
@@ -154,7 +190,7 @@ def main():
     supply_graph_canvas.create_text(180, 180, text='저공급', fill='gray', font=('', 15))
 
     #외기온도 그래프
-    graph_canvas.create_text(560, 15, text='외기온도 그래프', font=('', 12, 'bold'))
+    graph_canvas.create_text(580, 15, text='외기온도 그래프', font=('', 12, 'bold'))
 
     degree_graph_canvas = Canvas(graph_canvas, width=360, height=240, bg='white', highlightbackground='black')
     degree_graph_canvas.place(x=400, y=30)
@@ -192,11 +228,11 @@ def main():
     produced_graph_canvas.create_text(35, 10, text='RT', font=('', 10))
         
     #건물부하 그래프
-    graph_canvas.create_text(560, 285, text='건물부하 그래프', font=('', 12, 'bold'))
+    graph_canvas.create_text(580, 285, text='건물부하 그래프', font=('', 12, 'bold'))
 
     building_graph_canvas = Canvas(graph_canvas, width=360, height=240, bg='white', highlightbackground='black')
     building_graph_canvas.place(x=400, y=300)
-
+    
     building_graph_canvas.create_line(5, 220, 355, 220)
     building_graph_canvas.create_text(335, 210, text='시간(h)', font=('', 10))
     for i in range(25):
@@ -223,10 +259,10 @@ def main():
             electric_graph_canvas.create_text(20+d*13.3, 230, text="{}".format(d), font=('', 10))
     
     electric_graph_canvas.create_line(20, 235, 20, 5)
-    electric_graph_canvas.create_text(35, 10, text='KW/h', font=('', 10))#1KW=860Kcal, 1 RT = 3,024 Kcal/h 1 RT = 3.51628 KW/h
+    electric_graph_canvas.create_text(40, 10, text='KW/h', font=('', 10))#1KW=860Kcal, 1 RT = 3,024 Kcal/h 1 RT = 3.51628 KW/h
 
     #효율 그래프
-    graph_canvas.create_text(560, 555, text='효율 그래프', font=('', 12, 'bold'))
+    graph_canvas.create_text(580, 555, text='효율 그래프', font=('', 12, 'bold'))
 
     effciency_graph_canvas = Canvas(graph_canvas, width=360, height=240, bg='white', highlightbackground='black')
     effciency_graph_canvas.place(x=400, y=570)
@@ -248,37 +284,14 @@ def main():
 
     effciency_graph_canvas.create_arc(20, 50, 340, 370, start=0, extent=180, outline='black', width=2)
     effciency_graph_canvas.create_oval(170, 220, 190, 200, fill='black')
+
+    arrow = effciency_graph_canvas.create_line(180, 210, 70, 210, width=3)
         
     #파이프
-    supply_pipe = [p_x, p_y, 
-                p_x+80, p_y, 
-                p_x+80, p_y+280,
-
-                (p_x+320, p_y+280), (p_x+320, p_y+185), (p_x+300, p_y+185), (p_x+300, p_y+165), (p_x+320, p_y+165), (p_x+320, p_y-10), (p_x+300, p_y-10), (p_x+300, p_y-30), (p_x+320, p_y-30), (p_x+320, p_y-205), (p_x+300, p_y-205), (p_x+300, p_y-225), (p_x+340, p_y-225), (p_x+340, p_y+280),
-                (p_x+520, p_y+280), (p_x+520, p_y+185), (p_x+500, p_y+185), (p_x+500, p_y+165), (p_x+520, p_y+165), (p_x+520, p_y-10), (p_x+500, p_y-10), (p_x+500, p_y-30), (p_x+520, p_y-30), (p_x+520, p_y-205), (p_x+500, p_y-205), (p_x+500, p_y-225), (p_x+540, p_y-225), (p_x+540, p_y+280),
-                (p_x+720, p_y+280), (p_x+720, p_y+185), (p_x+700, p_y+185), (p_x+700, p_y+165), (p_x+720, p_y+165), (p_x+720, p_y-10), (p_x+700, p_y-10), (p_x+700, p_y-30), (p_x+720, p_y-30), (p_x+720, p_y-205), (p_x+700, p_y-205), (p_x+700, p_y-225), (p_x+740, p_y-225), (p_x+740, p_y+280),
-                (p_x+920, p_y+280), (p_x+920, p_y+185), (p_x+900, p_y+185), (p_x+900, p_y+165), (p_x+920, p_y+165), (p_x+920, p_y-10), (p_x+900, p_y-10), (p_x+900, p_y-30), (p_x+920, p_y-30), (p_x+920, p_y-205), (p_x+900, p_y-205), (p_x+900, p_y-225), (p_x+940, p_y-225), (p_x+940, p_y+280),
-                (p_x+1120, p_y+280), (p_x+1120, p_y+185), (p_x+1100, p_y+185), (p_x+1100, p_y+165), (p_x+1120, p_y+165), (p_x+1120, p_y-10), (p_x+1100, p_y-10), (p_x+1100, p_y-30), (p_x+1120, p_y-30), (p_x+1120, p_y-205), (p_x+1100, p_y-205), (p_x+1100, p_y-225), (p_x+1140, p_y-225), (p_x+1140, p_y+280),
-
-                p_x+1140, p_y+320,
-                p_x+40, p_y+320,
-                p_x+40, p_y+40,
-                p_x, p_y+40]
-
-    return_pipe = [p_x, p_y-40, 
-                p_x+80, p_y-40, 
-                p_x+80, p_y-320,
-
-                (p_x+160, p_y-320), (p_x+160, p_y+185), (p_x+200, p_y+185), (p_x+200, p_y+165), (p_x+180, p_y+165), (p_x+180, p_y-10), (p_x+200, p_y-10), (p_x+200, p_y-30), (p_x+180, p_y-30), (p_x+180, p_y-205), (p_x+200, p_y-205), (p_x+200, p_y-225), (p_x+180, p_y-225), (p_x+180, p_y-320),
-                (p_x+360, p_y-320), (p_x+360, p_y+185), (p_x+400, p_y+185), (p_x+400, p_y+165), (p_x+380, p_y+165), (p_x+380, p_y-10), (p_x+400, p_y-10), (p_x+400, p_y-30), (p_x+380, p_y-30), (p_x+380, p_y-205), (p_x+400, p_y-205), (p_x+400, p_y-225), (p_x+380, p_y-225), (p_x+380, p_y-320),
-                (p_x+560, p_y-320), (p_x+560, p_y+185), (p_x+600, p_y+185), (p_x+600, p_y+165), (p_x+580, p_y+165), (p_x+580, p_y-10), (p_x+600, p_y-10), (p_x+600, p_y-30), (p_x+580, p_y-30), (p_x+580, p_y-205), (p_x+600, p_y-205), (p_x+600, p_y-225), (p_x+580, p_y-225), (p_x+580, p_y-320),
-                (p_x+760, p_y-320), (p_x+760, p_y+185), (p_x+800, p_y+185), (p_x+800, p_y+165), (p_x+780, p_y+165), (p_x+780, p_y-10), (p_x+800, p_y-10), (p_x+800, p_y-30), (p_x+780, p_y-30), (p_x+780, p_y-205), (p_x+800, p_y-205), (p_x+800, p_y-225), (p_x+780, p_y-225), (p_x+780, p_y-320),
-                (p_x+960, p_y-320), (p_x+960, p_y+185), (p_x+1000, p_y+185), (p_x+1000, p_y+165), (p_x+980, p_y+165), (p_x+980, p_y-10), (p_x+1000, p_y-10), (p_x+1000, p_y-30), (p_x+980, p_y-30), (p_x+980, p_y-205), (p_x+1000, p_y-205), (p_x+1000, p_y-225), (p_x+980, p_y-225), (p_x+980, p_y-320),
-
-                p_x+980, p_y-360,
-                p_x+40, p_y-360,
-                p_x+40, p_y-80,
-                p_x, p_y-80]
+    supply_pipe = canvas.create_polygon(supply_pipe, fill='white', outline='blue', width=5)
+    return_pipe = canvas.create_polygon(return_pipe, fill='white', outline='orange', width=5)
+    p_return = canvas.create_text(p_x+520, p_y-340, text='환수 온도 : 도', font=('', 12, 'bold'), anchor='w')
+    p_supply = canvas.create_text(p_x+520, p_y+300, text='공급 온도 : 도', font=('', 12, 'bold'), anchor='w')
 
     #건물
     canvas.create_rectangle(p_x+200, p_y-290, p_x+300, p_y-140, fill='#E0E0E0')
@@ -321,11 +334,6 @@ def main():
 
             for j in range(1, 5):
                 canvas.create_line(p_x+200+i*200, p_y-290+x*195+j*30, p_x+300+i*200, p_y-290+x*195+j*30)
-    #파이프
-    supply_pipe = canvas.create_polygon(supply_pipe, fill='white', outline='blue', width=5)
-    return_pipe = canvas.create_polygon(return_pipe, fill='white', outline='orange', width=5)
-    p_return = canvas.create_text(p_x+520, p_y-340, text='환수 온도 : 도', font=('', 12, 'bold'), anchor='w')
-    p_supply = canvas.create_text(p_x+520, p_y+295, text='공급 온도 : 도', font=('', 12, 'bold'), anchor='w')
 
     #냉동기 이미지
     ref = Image.open('refrigerator2.png')
@@ -403,8 +411,8 @@ def set_color(line):
     # entrophy = str(line[2])
     r_degree = round(float(line[3]), 2)
     s_degree = round(float(line[4]), 2)
-    date = str(line[5]).split(' ')[0]
-    time = str(line[5]).split(' ')[1].split(':')
+    date = str(line[7]).split(' ')[0]
+    time = str(line[7]).split(' ')[1].split(':')
     r_color = 'orange'
     s_color = 'orange'
 
@@ -448,6 +456,39 @@ def set_color(line):
         building_graph = building_graph_canvas.create_polygon(builidng_plots[:min(t, 96)], fill='blue', width=2)
         degree_graph = degree_graph_canvas.create_polygon(degree_plots[:min(t, 96)], fill='blue', width=2)
         electric_graph = electric_graph_canvas.create_polygon(electric_plots, fill='#03BAFD')
+    abs_over = abs(day_of_over[date][i])
+    try:
+        if abs_over == 0:
+            x = 110
+            y = 0
+        elif abs_over > 0 and abs_over <=100:
+            x = abs(math.cos(18)*110)
+            y = -abs(math.sin(18)*110)
+        
+        elif abs_over > 100 and abs_over <=200:
+            x = abs(math.cos(54)*110)
+            y = -abs(math.sin(54)*110)
+        
+        elif abs_over > 200 and abs_over <=300:
+            x = 0
+            y = -110
+        
+        elif abs_over > 300 and abs_over <= 400:
+            x = -abs(math.cos(126)*110)
+            y = -abs(math.sin(126)*110)
+        
+        elif abs_over > 400 and abs_over <= 500:
+            x = -abs(math.cos(162)*110)
+            y = -abs(math.sin(162)*110)
+        
+        else:
+            x=-110
+            y=0
+        coordinate = [180, 210, 180+x, 210+y]
+
+        effciency_graph_canvas.coords(arrow, coordinate)
+    except:
+        pass
 
     if r_degree>=18:
         round_rd = round(r_degree)
@@ -567,7 +608,7 @@ def set_color(line):
 
             canvas.itemconfig(s, text=str(s_degree)+'도')
             canvas.itemconfig(r, text=str(r_degree)+'도')
-            canvas.itemconfig(b, text=str(total_rt)+'도')
+            canvas.itemconfig(b, text=str(total_rt)+'RT')
 
     canvas.itemconfig(supply_pipe, fill=s_color)
     canvas.itemconfig(return_pipe, fill=r_color)
