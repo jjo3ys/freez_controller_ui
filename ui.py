@@ -402,7 +402,7 @@ def stop_func():
     global stop
     stop = False
 
-def set_color(line):
+def set_data(line):
     global degree, supply_degree, return_degree, rt, wf, produce_rt, building_rt, over_rt, under_rt, p_return, p_supply
     global over_graph, produce_graph, building_graph, degree_graph, electric_graph
 
@@ -444,14 +444,18 @@ def set_color(line):
     electric_plots.append([20+320*(t-1)/96, 220])
     electric_plots.append([20, 220])
 
+    if over_plots[-1][1] <= 120:
+        color = 'blue'
+    else:
+        color = 'red'
     try:
-        over_graph = supply_graph_canvas.create_line(over_plots, fill='blue', width=2)
+        over_graph = supply_graph_canvas.create_line(over_plots, fill=color, width=2)
         produce_graph = produced_graph_canvas.create_line(produce_plots, fill='blue', width=2)
         building_graph = building_graph_canvas.create_line(builidng_plots, fill='blue', width=2)
         degree_graph = degree_graph_canvas.create_line(degree_plots, fill='blue', width=2)
         electric_graph = electric_graph_canvas.create_polygon(electric_plots, fill='#03BAFD')
     except:
-        over_graph = supply_graph_canvas.create_polygon(over_plots[:min(t, 96)], fill='blue', width=2)
+        over_graph = supply_graph_canvas.create_polygon(over_plots[:min(t, 96)], fill=color, width=2)
         produce_graph = produced_graph_canvas.create_polygon(produce_plots[:min(t, 96)], fill='blue', width=2)
         building_graph = building_graph_canvas.create_polygon(builidng_plots[:min(t, 96)], fill='blue', width=2)
         degree_graph = degree_graph_canvas.create_polygon(degree_plots[:min(t, 96)], fill='blue', width=2)
@@ -738,7 +742,7 @@ def open_file():
         scroll.config(command=custom_command)
         index = 0
         df_list = df.to_numpy().tolist()
-        set_color(df_list[max(date_list_box.nearest(0), index)])
+        set_data(df_list[max(date_list_box.nearest(0), index)])
     except:
         messagebox.showwarning("파일 불러오기 오류", "파일을 불러올 수 없습니다.")
 
@@ -759,7 +763,7 @@ def play_file():
                 degree_graph_canvas.delete(degree_graph)
                 electric_graph_canvas.delete(electric_graph)
             except:pass
-            set_color(df_list[max(date_list_box.nearest(0), index)])
+            set_data(df_list[max(date_list_box.nearest(0), index)])
             index+=1
             if index == date_list_box.size():
                 break
@@ -785,7 +789,7 @@ def select_date(date_index):
         electric_graph_canvas.delete(electric_graph)
     except:pass  
 
-    set_color(select)
+    set_data(select)
     
 def get_date_list():   
     try:
@@ -834,7 +838,7 @@ def custom_command(*args):
         electric_graph_canvas.delete(electric_graph)
     except:pass
      
-    set_color(select)
+    set_data(select)
 
 if __name__ == '__main__':
     main()

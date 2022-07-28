@@ -2,7 +2,7 @@
 !*.py
 !*.png
 !*.ico
-!*.csv
+# !*.csv
 !*.xlsx
 !*.gitignore
 # !*.exe
