@@ -66,7 +66,7 @@ def main():
     global canvas, root, supply_graph_canvas, degree_graph_canvas, produced_graph_canvas, building_graph_canvas, electric_graph_canvas, effciency_graph_canvas, norm, bold
     global date_list_box, scroll, play_var
     global absortion1, absortion2, absortion3, absortion4, absortion1_b, absortion2_b, absortion3_b, absortion4_b
-    global turbor1, turbor2, turbor3, turbor4, turbor1_b, turbor2_b, turbor3_b, turbor4_b
+    global ref_list
     global return_pipe, supply_pipe, arrow
     global w, h
     global return_list, supply_list, building_rt_list, p_supply, p_return
@@ -343,47 +343,57 @@ def main():
     ref475 = ImageTk.PhotoImage(ref475)
     ref180 = ref.resize((64, 40))
     ref180 = ImageTk.PhotoImage(ref180)
-    #흡수식
-    canvas.create_image(p_x-140, p_y-140, image=ref600)
-    canvas.create_text(p_x-140, p_y-110, text='흡수식 1', font=('', 10), anchor='center')
-    absortion1_b = canvas.create_rectangle((p_x-160, p_y-103), (p_x-120, p_y-88), fill='red', outline='black')
-    absortion1 = canvas.create_text(p_x-140, p_y-95, text='OFF', font=('', 10, 'bold'), fill='white')
 
-    canvas.create_image(p_x-140, p_y-60, image=ref600)
-    canvas.create_text(p_x-140, p_y-30, text='흡수식 2', font=('', 10), anchor='center')
-    absortion2_b = canvas.create_rectangle((p_x-160, p_y-23), (p_x-120, p_y-8), fill='red', outline='black')
-    absortion2 = canvas.create_text(p_x-140, p_y-15, text='OFF', font=('', 10, 'bold'), fill='white')
-
-    canvas.create_image(p_x-140, p_y+20, image=ref600)
-    canvas.create_text(p_x-140, p_y+50, text='흡수식 3', font=('', 10), anchor='center')
-    absortion3_b = canvas.create_rectangle((p_x-160, p_y+55), (p_x-120, p_y+72), fill='red', outline='black')
-    absortion3 = canvas.create_text(p_x-140, p_y+65, text='OFF', font=('', 10, 'bold'), fill='white')
-
-    canvas.create_image(p_x-140, p_y+100, image=ref600)
-    canvas.create_text(p_x-140, p_y+130, text='흡수식 4', font=('', 10), anchor='center')
-    absortion4_b = canvas.create_rectangle((p_x-160, p_y+137), (p_x-120, p_y+152), fill='red', outline='black')
-    absortion4 = canvas.create_text(p_x-140, p_y+145, text='OFF', font=('', 10, 'bold'), fill='white')
-
+    ref_list = []
     #터보식
     canvas.create_image(p_x-40, p_y-140, image=ref475)
     canvas.create_text(p_x-40, p_y-110, text='터보식 1', font=('', 10), anchor='center')
     turbor1_b = canvas.create_rectangle((p_x-60, p_y-103), (p_x-20, p_y-88), fill='red', outline='black')
     turbor1 = canvas.create_text(p_x-40, p_y-95, text='OFF', font=('', 10, 'bold'), fill='white')
-    
+    ref_list.append([turbor1, turbor1_b])
+
     canvas.create_image(p_x-40, p_y-60, image=ref475)
     canvas.create_text(p_x-40, p_y-30, text='터보식 2', font=('', 10), anchor='center')
     turbor2_b = canvas.create_rectangle((p_x-60, p_y-23), (p_x-20, p_y-8), fill='red', outline='black')
     turbor2 = canvas.create_text(p_x-40, 405, text='OFF', font=('', 10, 'bold'), fill='white')
+    ref_list.append([turbor2, turbor2_b])
 
     canvas.create_image(p_x-40, p_y+20, image=ref180)
     canvas.create_text(p_x-40, p_y+50, text='터보식 3', font=('', 10), anchor='center')
     turbor3_b = canvas.create_rectangle((p_x-60, p_y+55), (p_x-20, p_y+72), fill='red', outline='black')
     turbor3 = canvas.create_text(p_x-40, 485, text='OFF', font=('', 10, 'bold'), fill='white')
+    ref_list.append([turbor3, turbor3_b])
 
     canvas.create_image(p_x-40, p_y+100, image=ref180)
     canvas.create_text(p_x-40, p_y+130, text='터보식 4', font=('', 10), anchor='center')
     turbor4_b = canvas.create_rectangle((p_x-60, p_y+137), (p_x-20, p_y+152), fill='red', outline='black')
     turbor4 = canvas.create_text(p_x-40, p_y+145, text='OFF', font=('', 10, 'bold'), fill='white')
+    ref_list.append([turbor4, turbor4_b])
+
+    #흡수식
+    canvas.create_image(p_x-140, p_y-140, image=ref600)
+    canvas.create_text(p_x-140, p_y-110, text='흡수식 1', font=('', 10), anchor='center')
+    absortion1_b = canvas.create_rectangle((p_x-160, p_y-103), (p_x-120, p_y-88), fill='red', outline='black')
+    absortion1 = canvas.create_text(p_x-140, p_y-95, text='OFF', font=('', 10, 'bold'), fill='white')
+    ref_list.append([absortion1, absortion1_b])
+
+    canvas.create_image(p_x-140, p_y-60, image=ref600)
+    canvas.create_text(p_x-140, p_y-30, text='흡수식 2', font=('', 10), anchor='center')
+    absortion2_b = canvas.create_rectangle((p_x-160, p_y-23), (p_x-120, p_y-8), fill='red', outline='black')
+    absortion2 = canvas.create_text(p_x-140, p_y-15, text='OFF', font=('', 10, 'bold'), fill='white')
+    ref_list.append([absortion2, absortion2_b])
+
+    canvas.create_image(p_x-140, p_y+20, image=ref600)
+    canvas.create_text(p_x-140, p_y+50, text='흡수식 3', font=('', 10), anchor='center')
+    absortion3_b = canvas.create_rectangle((p_x-160, p_y+55), (p_x-120, p_y+72), fill='red', outline='black')
+    absortion3 = canvas.create_text(p_x-140, p_y+65, text='OFF', font=('', 10, 'bold'), fill='white')
+    ref_list.append([absortion3, absortion3_b])
+
+    canvas.create_image(p_x-140, p_y+100, image=ref600)
+    canvas.create_text(p_x-140, p_y+130, text='흡수식 4', font=('', 10), anchor='center')
+    absortion4_b = canvas.create_rectangle((p_x-160, p_y+137), (p_x-120, p_y+152), fill='red', outline='black')
+    absortion4 = canvas.create_text(p_x-140, p_y+145, text='OFF', font=('', 10, 'bold'), fill='white')
+    ref_list.append([absortion4, absortion4_b])
 
     canvas.create_rectangle((p_x-183, p_y-170), (p_x, p_y+160), width=5)
     canvas.create_text(p_x-92, p_y-195, text='기계실', font=('', 15))
@@ -403,12 +413,11 @@ def stop_func():
     stop = False
 
 def set_data(line):
-    global degree, supply_degree, return_degree, rt, wf, produce_rt, building_rt, over_rt, under_rt, p_return, p_supply
+    global p_return, p_supply
     global over_graph, produce_graph, building_graph, degree_graph, electric_graph
 
     total_rt = line[0]
     refs = list(map(int, eval(line[1])))
-    # entrophy = str(line[2])
     r_degree = round(float(line[3]), 2)
     s_degree = round(float(line[4]), 2)
     date = str(line[7]).split(' ')[0]
@@ -416,51 +425,40 @@ def set_data(line):
     r_color = 'orange'
     s_color = 'orange'
 
-    over_plots = []
-    degree_plots = []
-    produce_plots = []
-    builidng_plots = []
-    electric_plots = []
+    over_plots = [10, 120]
+    degree_plots = [20, 220-day_of_degree[date][0]/35*175]
+    produce_plots = [20, 220]
+    builidng_plots = [20, 220]
+    electric_plots = [20, 220]
+    t = int(time[0])*4 + (int(time[1])//15)
 
-    t = int(time[0])*4 + (int(time[1])//15) + 1
-
-    if t == 1 or len(day_of_over[date]) != 96:
-        over_plots.append([10, 120])
-        degree_plots.append([20, 220])
-        produce_plots.append([20, 220])
-        builidng_plots.append([20, 220])
-        electric_plots.append([20, 220])
-
-    for i in range(t):
+    for i in range(t+1):
         try:
-            over_plots.append([3.325*i+10, 120+day_of_over[date][i]/supply_max*100])
-            produce_plots.append([3.325*i+20, 220-day_of_produce[date][i]/produce_max*200])
-            builidng_plots.append([3.325*i+20, 220-day_of_building[date][i]/building_max*200])
-            degree_plots.append([3.325*i+20, 220-day_of_degree[date][i]/35*175])    
-            electric_plots.append([3.325*i+20, 220-sum(day_of_produce[date][:i])*3.51628/electric_max*200])
+            over_plots += [3.325*i+10, 120+day_of_over[date][i]/supply_max*100]
+            produce_plots += [3.325*i+20, 220-day_of_produce[date][i]/produce_max*200]
+            builidng_plots += [3.325*i+20, 220-day_of_building[date][i]/building_max*200]
+            degree_plots += [3.325*i+20, 220-day_of_degree[date][i]/35*175]
+            electric_plots += [3.325*i+20, 220-sum(day_of_produce[date][:i])*3.51628/electric_max*200]
         except:
             pass
         
-    electric_plots.append([20+320*(t-1)/96, 220])
-    electric_plots.append([20, 220])
+    electric_plots += [20+320*(t-1)/96, 220]
+    electric_plots += [20, 220]
 
-    if over_plots[-1][1] <= 120:
+    if over_plots[-1] <= 120:
         color = 'blue'
     else:
         color = 'red'
-    try:
-        over_graph = supply_graph_canvas.create_line(over_plots, fill=color, width=2)
-        produce_graph = produced_graph_canvas.create_line(produce_plots, fill='blue', width=2)
-        building_graph = building_graph_canvas.create_line(builidng_plots, fill='blue', width=2)
-        degree_graph = degree_graph_canvas.create_line(degree_plots, fill='blue', width=2)
-        electric_graph = electric_graph_canvas.create_polygon(electric_plots, fill='#03BAFD')
-    except:
-        over_graph = supply_graph_canvas.create_polygon(over_plots[:min(t, 96)], fill=color, width=2)
-        produce_graph = produced_graph_canvas.create_polygon(produce_plots[:min(t, 96)], fill='blue', width=2)
-        building_graph = building_graph_canvas.create_polygon(builidng_plots[:min(t, 96)], fill='blue', width=2)
-        degree_graph = degree_graph_canvas.create_polygon(degree_plots[:min(t, 96)], fill='blue', width=2)
-        electric_graph = electric_graph_canvas.create_polygon(electric_plots, fill='#03BAFD')
-    abs_over = abs(day_of_over[date][i])
+
+    supply_graph_canvas.coords(over_graph, over_plots)
+    supply_graph_canvas.itemconfig(over_graph, fill=color)
+
+    produced_graph_canvas.coords(produce_graph, produce_plots)
+    building_graph_canvas.coords(building_graph, builidng_plots)
+    degree_graph_canvas.coords(degree_graph, degree_plots)
+    electric_graph_canvas.coords(electric_graph, electric_plots)
+
+    abs_over = abs(day_of_over[date][t-1])
     try:
         if abs_over == 0:
             x = 110
@@ -518,92 +516,17 @@ def set_data(line):
     else:
         s_color = '#'+degree_color[round_sd]
 
-    produced = 0
-
-    if refs[0] == 1:
-        canvas.itemconfig(turbor1, text='ON')
-        canvas.itemconfig(turbor1_b, fill='#009900')
-        produced += 475
-    elif refs[0] == 0:
-        canvas.itemconfig(turbor1, text='OFF')
-        canvas.itemconfig(turbor1_b, fill='red')
-
-    if refs[1] == 1:
-        canvas.itemconfig(turbor2, text='ON')
-        canvas.itemconfig(turbor2_b, fill='#009900')
-        produced += 475
-    elif refs[1] == 0:
-        canvas.itemconfig(turbor2, text='OFF')
-        canvas.itemconfig(turbor2_b, fill='red')
-
-    if refs[2] == 1:
-        canvas.itemconfig(turbor3, text='ON')
-        canvas.itemconfig(turbor3_b, fill='#009900')
-        produced += 180
-    elif refs[2] == 0:
-        canvas.itemconfig(turbor3, text='OFF')
-        canvas.itemconfig(turbor3_b, fill='red')
-
-    if refs[3] == 1:
-        canvas.itemconfig(turbor4, text='ON')
-        canvas.itemconfig(turbor4_b, fill='#009900')
-        produced += 180
-    elif refs[3] == 0:
-        canvas.itemconfig(turbor4, text='OFF')
-        canvas.itemconfig(turbor4_b, fill='red')
-
-    if refs[4] == 1:
-        canvas.itemconfig(absortion1, text='ON')
-        canvas.itemconfig(absortion1_b, fill='#009900')
-        produced += 600
-    elif refs[4] == 0:
-        canvas.itemconfig(absortion1, text='OFF')
-        canvas.itemconfig(absortion1_b, fill='red')
-
-    if refs[5] == 1:
-        canvas.itemconfig(absortion2, text='ON')
-        canvas.itemconfig(absortion2_b, fill='#009900')
-        produced += 600
-    elif refs[5] == 0:
-        canvas.itemconfig(absortion2, text='OFF')
-        canvas.itemconfig(absortion2_b, fill='red')
-
-    if refs[6] == 1:
-        canvas.itemconfig(absortion3, text='ON')
-        canvas.itemconfig(absortion3_b, fill='#009900')
-        produced += 600
-    elif refs[6] == 0:
-        canvas.itemconfig(absortion3, text='OFF')
-        canvas.itemconfig(absortion3_b, fill='red')
-
-    if refs[7] == 1:
-        canvas.itemconfig(absortion4, text='ON')
-        canvas.itemconfig(absortion4_b, fill='#009900')
-        produced += 600
-    elif refs[7] == 0:
-        canvas.itemconfig(absortion4, text='OFF')
-        canvas.itemconfig(absortion4_b, fill='red')
-
-    # if produced>=total_rt:
-    #     over = round(produced-total_rt,2)
-    #     under = 0.0
-    # else:
-    #     over = 0.0
-    #     under = round(total_rt-produced,2)
-    
-    # degree = canvas.create_text(w-700, h-430, text=str(entrophy)+'도', font=('', 10), anchor='w')
-    # produce_rt = canvas.create_text(w-620, h-80, text=str(produced)+'RT', font=('', 10), anchor='w')
-    
-    # building_rt = canvas.create_text(w-235, h-80, text=str(total_rt)+'RT', font=('', 10), anchor='w')
-    # over_rt = canvas.create_text(w-245, h-430, text=str(over)+'RT', font=('', 10), anchor='w')
-    # under_rt = canvas.create_text(w-245, h-410, text=str(under)+'RT', font=('', 10), anchor='w')
+    for i in range(8):
+        if refs[i] == 1:
+            canvas.itemconfig(ref_list[i][0], text='ON')
+            canvas.itemconfig(ref_list[i][1], fill='#009900')
+        else:
+            canvas.itemconfig(ref_list[i][0], text='OFF')
+            canvas.itemconfig(ref_list[i][1], fill='red')
+   
     canvas.itemconfig(p_return, text='환수 온도 : '+str(r_degree)+'도')
     canvas.itemconfig(p_supply, text='공급 온도 : '+str(s_degree)+'도')
 
-    supply_degree = []
-    return_degree = []
-    rt = []
-    wf = []
     for i in range(3):
         for j in range(5):
             s = supply_list[i*5+j]
@@ -626,14 +549,13 @@ def open_file():
     global index
     global day_of_over, day_of_degree, day_of_building, day_of_produce
     global produce_max, building_max, supply_max, electric_max, produce_list, building_list, over_supply_list, electric_list
-
+    global over_graph, degree_graph, produce_graph, building_graph, electric_graph
     filetypes = (
         ('csv files', '*.csv'),
         ('excel files', '*.xlsx'),
         ('all files', '*.*')
     )
     try:  
-
         try:
             for p, b, e in zip(produce_list, building_list, electric_list):
                 produced_graph_canvas.delete(p)
@@ -645,6 +567,14 @@ def open_file():
             for o in over_supply_list:
                 supply_graph_canvas.delete(o)
         except: pass
+
+        try:
+            supply_graph_canvas.delete(over_graph)
+            degree_graph_canvas.delete(degree_graph)
+            produced_graph_canvas.delete(produce_graph)
+            building_graph_canvas.delete(building_graph)
+            electric_graph_canvas.delete(electric_graph)
+        except:pass
 
         filename = filedialog.askopenfilename(
             title='파일 선택',
@@ -660,7 +590,7 @@ def open_file():
         total_rt = df['total_rt'].tolist()
         cover_rt = df['operation'].tolist()
         degree_list = df['air_temp'].tolist()
-
+        first_date = datetime[0].split(" ")[0]
         for i in range(len(cover_rt)):
             cover_ = list(map(int, eval(cover_rt[i])))
             r = cover_[0:2].count(1)*475 + cover_[2:4].count(1)*180 + cover_[4:].count(1)*600
@@ -742,6 +672,23 @@ def open_file():
         scroll.config(command=custom_command)
         index = 0
         df_list = df.to_numpy().tolist()
+
+        over_plots = [10, 120]
+        over_plots += over_plots
+        degree_plots = [20, 220-day_of_degree[first_date][0]/35*175]
+        degree_plots += degree_plots
+        produce_plots = [20, 220]
+        produce_plots += produce_plots
+        builidng_plots = [20, 220]
+        builidng_plots += builidng_plots
+        electric_plots = [20, 220]
+        electric_plots += electric_plots
+
+        over_graph = supply_graph_canvas.create_line(over_plots, width=2)
+        produce_graph = produced_graph_canvas.create_line(produce_plots, fill='blue', width=2)
+        building_graph = building_graph_canvas.create_line(builidng_plots, fill='blue', width=2)
+        degree_graph = degree_graph_canvas.create_line(degree_plots, fill='blue', width=2)
+        electric_graph = electric_graph_canvas.create_polygon(electric_plots, fill='#03BAFD')
         set_data(df_list[max(date_list_box.nearest(0), index)])
     except:
         messagebox.showwarning("파일 불러오기 오류", "파일을 불러올 수 없습니다.")
@@ -756,13 +703,6 @@ def play_file():
         stop=True
         while stop:
             date_list_box.see(max(date_list_box.nearest(0), index))
-            try:
-                supply_graph_canvas.delete(over_graph)
-                produced_graph_canvas.delete(produce_graph)
-                building_graph_canvas.delete(building_graph)
-                degree_graph_canvas.delete(degree_graph)
-                electric_graph_canvas.delete(electric_graph)
-            except:pass
             set_data(df_list[max(date_list_box.nearest(0), index)])
             index+=1
             if index == date_list_box.size():
@@ -772,8 +712,8 @@ def play_file():
     except tkinter.TclError:
         pass
 
-    # except:
-    #     messagebox.showwarning("파일 불러오기 오류", "파일을 먼저 선택해 주세요.")              
+    except:
+        messagebox.showwarning("파일 불러오기 오류", "파일을 먼저 선택해 주세요.")              
             
 def select_date(date_index):
     global select, index
@@ -781,14 +721,6 @@ def select_date(date_index):
     index = date_index[0]
     date_list_box.see(index)
     select = df.loc[index].tolist()
-    try:
-        supply_graph_canvas.delete(over_graph)
-        produced_graph_canvas.delete(produce_graph)
-        building_graph_canvas.delete(building_graph)
-        degree_graph_canvas.delete(degree_graph)
-        electric_graph_canvas.delete(electric_graph)
-    except:pass  
-
     set_data(select)
     
 def get_date_list():   
@@ -829,15 +761,7 @@ def custom_command(*args):
 
     date_list_box.yview(*args)
     index = date_list_box.nearest(0)
-    select = df.loc[index].tolist()
-    try:
-        supply_graph_canvas.delete(over_graph)
-        produced_graph_canvas.delete(produce_graph)
-        building_graph_canvas.delete(building_graph)
-        degree_graph_canvas.delete(degree_graph)
-        electric_graph_canvas.delete(electric_graph)
-    except:pass
-     
+    select = df.loc[index].tolist()     
     set_data(select)
 
 if __name__ == '__main__':
