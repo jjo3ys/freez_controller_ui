@@ -1,5 +1,6 @@
 import time
 import math
+
 from tkinter import font
 import pandas as pd
 import tkinter
@@ -331,7 +332,7 @@ def main():
             r = canvas.create_text(p_x+250+i*200, p_y-245+x*195, text='', font=('', 10), anchor='center')
             b = canvas.create_text(p_x+250+i*200, p_y-185+x*195, text='', font=('', 10), anchor='center')           
             canvas.create_text(p_x+250+i*200, p_y-215+x*195, text=dong[i+x*5], font=('', 10), anchor='center')
-            canvas.create_text(p_x+250+i*200, p_y-155+x*195, text=str(wf[i+x*5]+'L/m'), font=('', 10), anchor='center')
+            canvas.create_text(p_x+250+i*200, p_y-155+x*195, text=str(wf[i+x*5])+' L/m', font=('', 10), anchor='center')
 
             supply_list.append(s)
             return_list.append(r)
