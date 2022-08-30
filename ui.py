@@ -1,7 +1,9 @@
 import time
 import math
+import os
 
 from tkinter import font
+from tkinter.ttk import Progressbar
 import pandas as pd
 import tkinter
 
@@ -9,6 +11,8 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import messagebox
 from PIL import ImageTk, Image
+
+from Simulator import Main
 
 wf = [3986.28, 1209.48, 848.66, 1259.43, 1531.40,
       863.21, 1151.27, 102.52, 435.12, 935.72,
@@ -70,7 +74,7 @@ class ResizingCanvas(Canvas):
 
 def main():
     global canvas, root, supply_graph_canvas, degree_graph_canvas, produced_graph_canvas, building_graph_canvas, electric_graph_canvas, effciency_graph_canvas, norm, bold
-    global date_list_box, scroll, play_var
+    global date_list_box, scroll, play_var, load_button, simul_button, read_button, choice, stop_button
     global absortion1, absortion2, absortion3, absortion4, absortion1_b, absortion2_b, absortion3_b, absortion4_b
     global ref_list
     global return_pipe, supply_pipe, arrow
@@ -110,23 +114,23 @@ def main():
     frame3 = Frame(frame1)
     frame3.pack(side='right')
     frame3_1 = Frame(frame3)
-    frame3_1.pack()
+    frame3_1.pack(fill='x')
     frame3_2 = Frame(frame3)
-    frame3_2.pack()
+    frame3_2.pack(fill='x')
     
     play_var = IntVar()
-    x1 = Radiobutton(frame3_1, text='1배속', value=1, variable=play_var)
-    x1.pack(side='left')
+    x1 = Radiobutton(frame3_1, text='Speed X1', value=1, variable=play_var)
+    x1.pack(side='left', anchor='w')
     
     x1.select()
-    x3 = Radiobutton(frame3_1, text='3배속', value=3, variable=play_var)
-    x3.pack(side='left')
+    x3 = Radiobutton(frame3_1, text='Speed X3', value=3, variable=play_var)
+    x3.pack(side='left', anchor='w')
     
-    x5 = Radiobutton(frame3_2, text='5배속', value=5, variable=play_var)
-    x5.pack(side='left')
+    x5 = Radiobutton(frame3_2, text='Speed X5', value=5, variable=play_var)
+    x5.pack(side='left', anchor='w')
     
-    x10 = Radiobutton(frame3_2, text='10배속', value=10, variable=play_var)
-    x10.pack(side='left')
+    x10 = Radiobutton(frame3_2, text='Speed X10', value=10, variable=play_var)
+    x10.pack(side='left', anchor='w')
     
     Label(frame1, width=5).pack(side='right')
 
@@ -136,24 +140,23 @@ def main():
     frame2_1.pack()
     frame2_2 = Frame(frame2)
     frame2_2.pack()
-
-    read_button = Button(frame2_1, width=7, height=1, text='재생', command = lambda: play_file())
+    frame2_3 = Frame(frame2)
+    frame2_3.pack()
+    
+    read_button = Button(frame2_1, width=7, height=1, text='Play', command = play_file)
     read_button.pack(side='left')
 
-    stop_button = Button(frame2_1, width=7, height=1, text='중지', command= stop_func)
+    stop_button = Button(frame2_2, width=7, height=1, text='Stop', command= stop_func)
     stop_button.pack(side='left')
 
-    open_button = Button(frame2_2, width=7, height=1, text='파일 열기', command = open_file)
-    open_button.pack(side='left')
-
-    choice = Button(frame2_2, width=7, height=1, text='날짜 선택', command = lambda: get_date_list())
+    choice = Button(frame2_3, width=7, height=1, text='Date', command = get_date_list)
     choice.pack(side='left')
 
     Label(frame1, width=5).pack(side='right')
 
     date_frame = Frame(frame1)
     date_frame.pack(side='right')
-    text_ = Label(date_frame, text='날짜/시간', width=20, height=1)
+    text_ = Label(date_frame, text='Date / Time', width=20, height=1)
     text_.pack(side='top')
     
     date_list_box = Listbox(date_frame, height=1, width=20)
@@ -163,6 +166,17 @@ def main():
     scroll.pack(side='top', fill='both')
 
     Label(frame1, width=5).pack(side='right', fill='x')
+
+    #model load
+    model_frame = Frame(frame1)
+    model_frame.pack(side='right')
+    load_button = Button(model_frame, width=7, height=1, text='LOAD', command = load_file)
+    load_button.pack()
+    Label(model_frame, height=1).pack()
+    simul_button = Button(model_frame, width=10, height=1, text='SIMULATION', command = simulation)
+    simul_button.pack()
+    if not len(os.listdir()):
+        simul_button['state'] = DISABLED
 
     canvas = ResizingCanvas(root, width=w, height=h, bg="white", highlightbackground='black')
     canvas.pack(side='bottom', anchor='center',fill=BOTH, expand=YES, padx='25', pady='25')
@@ -296,8 +310,8 @@ def main():
     #파이프
     supply_pipe = canvas.create_polygon(supply_pipe, fill='white', outline='blue', width=5)
     return_pipe = canvas.create_polygon(return_pipe, fill='white', outline='orange', width=5)
-    p_return = canvas.create_text(p_x+520, p_y-340, text='환수 온도 : 도', font=('', 12, 'bold'), anchor='w')
-    p_supply = canvas.create_text(p_x+520, p_y+300, text='공급 온도 : 도', font=('', 12, 'bold'), anchor='w')
+    p_return = canvas.create_text(p_x+520, p_y-340, text='Return Degree : ℃', font=('', 12, 'bold'), anchor='w')
+    p_supply = canvas.create_text(p_x+520, p_y+300, text='Supply Degree : ℃', font=('', 12, 'bold'), anchor='w')
 
     #건물
     canvas.create_rectangle(p_x+200, p_y-290, p_x+300, p_y-140, fill='#E0E0E0')
@@ -351,66 +365,66 @@ def main():
     ref180 = ImageTk.PhotoImage(ref180)
 
     ref_list = []
-    #터보식
+    #Turbor
     canvas.create_image(p_x-40, p_y-140, image=ref475)
-    canvas.create_text(p_x-40, p_y-110, text='터보식 1', font=('', 10), anchor='center')
+    canvas.create_text(p_x-40, p_y-110, text='Turbor 1', font=('', 10), anchor='center')
     turbor1_b = canvas.create_rectangle((p_x-60, p_y-103), (p_x-20, p_y-88), fill='red', outline='black')
     turbor1 = canvas.create_text(p_x-40, p_y-95, text='OFF', font=('', 10, 'bold'), fill='white')
     ref_list.append([turbor1, turbor1_b])
 
     canvas.create_image(p_x-40, p_y-60, image=ref475)
-    canvas.create_text(p_x-40, p_y-30, text='터보식 2', font=('', 10), anchor='center')
+    canvas.create_text(p_x-40, p_y-30, text='Turbor 2', font=('', 10), anchor='center')
     turbor2_b = canvas.create_rectangle((p_x-60, p_y-23), (p_x-20, p_y-8), fill='red', outline='black')
     turbor2 = canvas.create_text(p_x-40, 405, text='OFF', font=('', 10, 'bold'), fill='white')
     ref_list.append([turbor2, turbor2_b])
 
     canvas.create_image(p_x-40, p_y+20, image=ref180)
-    canvas.create_text(p_x-40, p_y+50, text='터보식 3', font=('', 10), anchor='center')
+    canvas.create_text(p_x-40, p_y+50, text='Turbor 3', font=('', 10), anchor='center')
     turbor3_b = canvas.create_rectangle((p_x-60, p_y+55), (p_x-20, p_y+72), fill='red', outline='black')
     turbor3 = canvas.create_text(p_x-40, 485, text='OFF', font=('', 10, 'bold'), fill='white')
     ref_list.append([turbor3, turbor3_b])
 
     canvas.create_image(p_x-40, p_y+100, image=ref180)
-    canvas.create_text(p_x-40, p_y+130, text='터보식 4', font=('', 10), anchor='center')
+    canvas.create_text(p_x-40, p_y+130, text='Turbor 4', font=('', 10), anchor='center')
     turbor4_b = canvas.create_rectangle((p_x-60, p_y+137), (p_x-20, p_y+152), fill='red', outline='black')
     turbor4 = canvas.create_text(p_x-40, p_y+145, text='OFF', font=('', 10, 'bold'), fill='white')
     ref_list.append([turbor4, turbor4_b])
 
-    #흡수식
+    #Abosrtion
     canvas.create_image(p_x-140, p_y-140, image=ref600)
-    canvas.create_text(p_x-140, p_y-110, text='흡수식 1', font=('', 10), anchor='center')
+    canvas.create_text(p_x-140, p_y-110, text='Abosrtion 1', font=('', 10), anchor='center')
     absortion1_b = canvas.create_rectangle((p_x-160, p_y-103), (p_x-120, p_y-88), fill='red', outline='black')
     absortion1 = canvas.create_text(p_x-140, p_y-95, text='OFF', font=('', 10, 'bold'), fill='white')
     ref_list.append([absortion1, absortion1_b])
 
     canvas.create_image(p_x-140, p_y-60, image=ref600)
-    canvas.create_text(p_x-140, p_y-30, text='흡수식 2', font=('', 10), anchor='center')
+    canvas.create_text(p_x-140, p_y-30, text='Abosrtion 2', font=('', 10), anchor='center')
     absortion2_b = canvas.create_rectangle((p_x-160, p_y-23), (p_x-120, p_y-8), fill='red', outline='black')
     absortion2 = canvas.create_text(p_x-140, p_y-15, text='OFF', font=('', 10, 'bold'), fill='white')
     ref_list.append([absortion2, absortion2_b])
 
     canvas.create_image(p_x-140, p_y+20, image=ref600)
-    canvas.create_text(p_x-140, p_y+50, text='흡수식 3', font=('', 10), anchor='center')
+    canvas.create_text(p_x-140, p_y+50, text='Abosrtion 3', font=('', 10), anchor='center')
     absortion3_b = canvas.create_rectangle((p_x-160, p_y+55), (p_x-120, p_y+72), fill='red', outline='black')
     absortion3 = canvas.create_text(p_x-140, p_y+65, text='OFF', font=('', 10, 'bold'), fill='white')
     ref_list.append([absortion3, absortion3_b])
 
     canvas.create_image(p_x-140, p_y+100, image=ref600)
-    canvas.create_text(p_x-140, p_y+130, text='흡수식 4', font=('', 10), anchor='center')
+    canvas.create_text(p_x-140, p_y+130, text='Abosrtion 4', font=('', 10), anchor='center')
     absortion4_b = canvas.create_rectangle((p_x-160, p_y+137), (p_x-120, p_y+152), fill='red', outline='black')
     absortion4 = canvas.create_text(p_x-140, p_y+145, text='OFF', font=('', 10, 'bold'), fill='white')
     ref_list.append([absortion4, absortion4_b])
 
     canvas.create_rectangle((p_x-183, p_y-170), (p_x, p_y+160), width=5)
-    canvas.create_text(p_x-92, p_y-195, text='기계실', font=('', 15))
+    canvas.create_text(p_x-92, p_y-195, text='Refrigerator', font=('', 15, 'bold'))
 
     image = Image.open("green_to_red.png").resize((20, 95))
     image = ImageTk.PhotoImage(image)
 
-    canvas.create_text(110, 70, text='수온 색상 변화', font=("", 15) , anchor='center')
+    canvas.create_text(110, 55, text='Temperature\nColor change', font=("", 15) , anchor='center')
     canvas.create_image(110, 130, image=image, anchor='center')
-    canvas.create_text(100, 90, text='17.0도', font=("", 10), anchor='e')
-    canvas.create_text(100, 170, text='7.0도', font=("", 10), anchor='e')
+    canvas.create_text(100, 90, text='17.0 ℃', font=("", 10), anchor='e')
+    canvas.create_text(100, 170, text='7.0 ℃', font=("", 10), anchor='e')
     
     canvas.mainloop()
 
@@ -420,57 +434,66 @@ def stop_func():
 
 def set_data(line):
     global p_return, p_supply
-    global over_graph, produce_graph, building_graph, degree_graph, electric_graph
+    global building_graph, degree_graph, electric_graph
 
-    total_rt = line[0]
-    refs = list(map(int, eval(line[1])))
-    r_degree = round(float(line[3]), 2)
-    s_degree = round(float(line[4]), 2)
-    date = str(line[7]).split(' ')[0]
-    time = str(line[7]).split(' ')[1].split(':')
+    pick = model_select.get()
+    model = model_list[pick]
+
+    refs = list(map(int, eval(line[3])))
+    r_degree = round(float(line[4]), 2)
+    s_degree = round(float(line[5]), 2)
+    date = str(line[0]).split(' ')[0]
+    time = str(line[0]).split(' ')[1].split(':')
 
     buildings_rt = line[9].split(', ')
-    buildings_supply = line[10].split(', ')
-    buildings_return = line[11].split(', ')
+    buildings_supply = list(map(float, line[10].split(', ')))
+    buildings_return = list(map(float, line[11].split(', ')))
 
     r_color = 'orange'
     s_color = 'orange'
 
-    over_plots = [10, 120]
-    degree_plots = [20, 220-day_of_degree[date][0]/35*175]
-    produce_plots = [20, 220]
-    builidng_plots = [20, 220]
-    electric_plots = [20, 220]
+    
     t = int(time[0])*4 + (int(time[1])//15)
+    
+    degree_plots = [20, 220-day_of_degree[model][date][0]/35*175]
+    builidng_plots = [20, 220]
+    
 
     for i in range(t+1):
         try:
-            over_plots += [3.325*i+10, 120+day_of_over[date][i]/supply_max*100]
-            produce_plots += [3.325*i+20, 220-day_of_produce[date][i]/produce_max*200]
-            builidng_plots += [3.325*i+20, 220-day_of_building[date][i]/building_max*200]
-            degree_plots += [3.325*i+20, 220-day_of_degree[date][i]/35*175]
-            electric_plots += [3.325*i+20, 220-sum(day_of_produce[date][:i])*3.51628/electric_max*200]
+            builidng_plots += [3.325*i+20, 220-day_of_building[model][date][i]/building_max*200]
+            degree_plots += [3.325*i+20, 220-day_of_degree[model][date][i]/35*175]
+            
         except:
             pass
-        
-    electric_plots += [20+320*(t-1)/96, 220]
-    electric_plots += [20, 220]
 
-    if over_plots[-1] <= 120:
-        color = 'blue'
-    else:
-        color = 'red'
 
-    supply_graph_canvas.coords(over_graph, over_plots)
-    supply_graph_canvas.itemconfig(over_graph, fill=color)
-
-    produced_graph_canvas.coords(produce_graph, produce_plots)
     building_graph_canvas.coords(building_graph, builidng_plots)
     degree_graph_canvas.coords(degree_graph, degree_plots)
-    electric_graph_canvas.coords(electric_graph, electric_plots)
+    
 
-    abs_over = abs(day_of_over[date][t-1])
+    for m in model_list:
+        over_plots = [10, 120]       
+        produce_plots = [20, 220]
+        electric_plots = [20, 220]
+        for i in range(t+1):
+            try:
+                over_plots += [3.325*i+10, 120+day_of_over[m][date][i]/supply_max*100]
+                produce_plots += [3.325*i+20, 220-day_of_produce[m][date][i]/produce_max*200]
+                electric_plots += [3.325*i+20, 220-sum(day_of_produce[m][date][:i])*3.51628/electric_max*200]
+            except:
+                pass
+
+        electric_plots += [20+320*t/96, 220]
+        electric_plots += [20, 220]
+
+        supply_graph_canvas.coords(df_dict[m]['over_graph'], over_plots)
+        produced_graph_canvas.coords(df_dict[m]['produce_graph'], produce_plots)
+        electric_graph_canvas.coords(df_dict[m]['electric_graph'], electric_plots)
+
+    
     try:
+        abs_over = abs(day_of_over[model][date][t])
         if abs_over == 0:
             x = 110
             y = 0
@@ -527,7 +550,7 @@ def set_data(line):
     else:
         s_color = '#'+degree_color[round_sd]
 
-    for i in range(8):
+    for i in range(6):
         if refs[i] == 1:
             canvas.itemconfig(ref_list[i][0], text='ON')
             canvas.itemconfig(ref_list[i][1], fill='#009900')
@@ -544,29 +567,78 @@ def set_data(line):
             r = return_list[i*5+j]
             b = building_rt_list[i*5+j]
 
-            canvas.itemconfig(s, text=buildings_supply[i*5+j]+'도')
-            canvas.itemconfig(r, text=buildings_return[i*5+j]+'도')
-            canvas.itemconfig(b, text=buildings_rt[i*5+j]+'RT')
+            canvas.itemconfig(s, text=str(round(buildings_supply[i*5+j],2))+' 도')
+            canvas.itemconfig(r, text=str(round(buildings_return[i*5+j],2))+' 도')
+            canvas.itemconfig(b, text=buildings_rt[i*5+j]+' RT')
 
     canvas.itemconfig(supply_pipe, fill=s_color)
     canvas.itemconfig(return_pipe, fill=r_color)
     
     root.update()  
 
-def open_file():
-    global df
-    global filename
+def pick_model():
+    pick = model_select.get()
+    model = model_list[pick]
+    df = df_dict[model]['data']
+    select = df.loc[index].tolist()
+    set_data(select)
+
+def disable_event():
+    pass
+
+def simulation():
+    model = Main()
+    progress_wd = Toplevel(root)
+    progress_wd.title("Simulating...")
+    progress_wd.iconbitmap('inu.ico')
+    progress_wd.resizable(False, False)
+    progress_wd.geometry('300x100+{}+{}'.format(int(root.winfo_width()/2), int(root.winfo_height()/2)))
+    progress_wd.protocol("WM_DELETE_WINDOW", disable_event)
+
+
+    p_var = DoubleVar()
+    pg_bar = Progressbar(progress_wd, maximum=100, length=250, variable=p_var)
+    pg_bar.place(x=150, y=50, anchor='center')
+
+    load_button['state'] = DISABLED
+    simul_button['state'] = DISABLED
+    read_button['state'] = DISABLED
+    stop_button['state'] = DISABLED
+    choice['state'] = DISABLED
+
+    simul = 'Simulating'
+    txt = StringVar()
+    txt.set(simul)
+
+    pg_txt = Label(progress_wd, textvariable=txt, anchor='center')
+    pg_txt.place(x=150, y=25, anchor='center')
+    id = 0
+    for process in model.run():
+        # print(process)
+        p_var.set(process+1)
+        pg_bar.update()
+        txt.set(simul+'.'*int((id//100)%3+1))
+        id += 1
+
+    progress_wd.destroy()
+    load_button['state'] = ACTIVE
+    simul_button['state'] = ACTIVE
+    read_button['state'] = ACTIVE
+    stop_button['state'] = ACTIVE
+    choice['state'] = ACTIVE
+    load_file()
+
+def load_file():
+    global df, df_dict
+    global model_select, model_list
     global datetime
     global index
     global day_of_over, day_of_degree, day_of_building, day_of_produce
-    global produce_max, building_max, supply_max, electric_max, produce_list, building_list, over_supply_list, electric_list
-    global over_graph, degree_graph, produce_graph, building_graph, electric_graph
-    filetypes = (
-        ('csv files', '*.csv'),
-        ('excel files', '*.xlsx'),
-        ('all files', '*.*')
-    )
-    try:  
+    global building_max, supply_max, produce_max, electric_max
+    global building_graph, electric_graph, degree_graph
+    global produce_list, building_list, electric_list, over_supply_list
+
+    try:
         try:
             for p, b, e in zip(produce_list, building_list, electric_list):
                 produced_graph_canvas.delete(p)
@@ -587,72 +659,100 @@ def open_file():
             electric_graph_canvas.delete(electric_graph)
         except:pass
 
-        filename = filedialog.askopenfilename(
-            title='파일 선택',
-            initialdir='/',
-            filetypes=filetypes)
+        model_list = Main.model_list
+        model_select = IntVar()
+        df_dict = {}
+        day_of_over = {}#
+        day_of_degree = {}#
+        day_of_produce = {}#
+        day_of_building = {}#
+        colors = ['blue', 'red']
+        building_max, supply_max, produce_max, electric_max = 0, 0, 0, 0    
 
-        if 'csv' in filename:
-            df = pd.read_csv(filename)
-        elif 'xlsx' in filename:
-            df = pd.read_excel(filename)
         
-        datetime = df['date'].tolist()
-        total_rt = df['total_rt'].tolist()
-        cover_rt = df['operation'].tolist()
-        degree_list = df['air_temp'].tolist()
-        first_date = datetime[0].split(" ")[0]
-        for i in range(len(cover_rt)):
-            cover_ = list(map(int, eval(cover_rt[i])))
-            r = cover_[0:2].count(1)*475 + cover_[2:4].count(1)*180 + cover_[4:].count(1)*600
+        for id, model in enumerate(model_list):
+            df_dict[model] = {}
+            day_of_over[model] = {}
+            day_of_degree[model] = {}
+            day_of_produce[model] = {}
+            day_of_building[model] = {}
 
-            cover_rt[i] = r
+            df = pd.read_csv("./simul_result/{}_result.csv".format(model))
+            df_dict[model]['data']=df
+            model_button = Radiobutton(canvas, text=model, value=id, variable=model_select, command=pick_model)
+            model_button.place(x=2, y=id*25+2)
+            model_button.configure(background='white')
+            datetime = df['date'].tolist()
+            total_rt = df['total_rt'].tolist()
+            cover_rt = df['operation'].tolist()
+            degree_list = df['air_temp'].tolist()
+            first_date = datetime[0].split(" ")[0]
+            for i in range(len(cover_rt)):
+                cover_ = list(map(int, eval(cover_rt[i])))
+                r = cover_[0:2].count(1)*475 + cover_[2:4].count(1)*180 + cover_[4:].count(1)*600
+
+                cover_rt[i] = r
+            for i in range(len(datetime)):
+                d = datetime[i].split(' ')[0]
+                if d not in day_of_over[model]:
+                    day_of_over[model][d] = [round(total_rt[i]-cover_rt[i], 2)]
+                else:
+                    day_of_over[model][d].append(round(total_rt[i]-cover_rt[i], 2))
+
+                if d not in day_of_produce[model]:
+                    day_of_produce[model][d] = [cover_rt[i]]
+                else:
+                    day_of_produce[model][d].append(cover_rt[i])
+
+                if d not in day_of_building[model]:
+                    day_of_building[model][d] = [round(total_rt[i], 2)]
+                else:
+                    day_of_building[model][d].append(round(total_rt[i], 2))
+
+                if d not in day_of_degree[model]:
+                    day_of_degree[model][d] = [degree_list[i]]
+                else:
+                    day_of_degree[model][d].append(degree_list[i])
+            
+            min_list = []
+            max_list = []
+            electric_max_list = []
+            for d in day_of_over[model]:
+                min_list.append(min(day_of_over[model][d]))
+                max_list.append(max(day_of_over[model][d]))
+                electric_max_list.append(sum(day_of_produce[model][d]))
+            
+            electric_max = max(round(max(electric_max_list)*3.51628), electric_max)#
+            produce_max = max(max(cover_rt), produce_max)#
+            building_max = max(round(max(total_rt), 2), building_max)#
+            supply_max = max(max(abs(min(min_list)), max(max_list)), supply_max)#
+
+            del min_list, max_list
+
+            over_plots = [10, 120]
+            over_plots += over_plots
+            produce_plots = [20, 220]
+            produce_plots += produce_plots
+            electric_plots = [20, 220]
+            electric_plots += electric_plots
         
-        day_of_over = {}
-        day_of_degree = {}
-        day_of_produce = {}
-        day_of_building = {}
-        
-        for i in range(len(datetime)):
-            d = datetime[i].split(' ')[0]
-            if d not in day_of_over:
-                day_of_over[d] = [round(total_rt[i]-cover_rt[i], 2)]
-            else:
-                day_of_over[d].append(round(total_rt[i]-cover_rt[i], 2))
+            
+            over_graph = supply_graph_canvas.create_line(over_plots, fill=colors[id], width=3-id)
+            produce_graph = produced_graph_canvas.create_line(produce_plots, fill=colors[id], width=3-id)
+            electric_graph = electric_graph_canvas.create_polygon(electric_plots, outline=colors[id], fill='', width=3-id)
 
-            if d not in day_of_produce:
-                day_of_produce[d] = [cover_rt[i]]
-            else:
-                day_of_produce[d].append(cover_rt[i])
+            supply_graph_canvas.create_rectangle(280, 15*id+5, 290, 15*(id+1), fill=colors[id])
+            produced_graph_canvas.create_rectangle(280, 15*id+5, 290, 15*(id+1), fill=colors[id])
+            electric_graph_canvas.create_rectangle(280, 15*id+5, 290, 15*(id+1), fill=colors[id])
 
-            if d not in day_of_building:
-                day_of_building[d] = [round(total_rt[i], 2)]
-            else:
-                day_of_building[d].append(round(total_rt[i], 2))
-
-            if d not in day_of_degree:
-                day_of_degree[d] = [degree_list[i]]
-            else:
-                day_of_degree[d].append(degree_list[i])
-        
-        min_list = []
-        max_list = []
-        electric_max_list = []
-        for d in day_of_over:
-            min_list.append(min(day_of_over[d]))
-            max_list.append(max(day_of_over[d]))
-            electric_max_list.append(sum(day_of_produce[d]))
-        
-        electric_max = round(max(electric_max_list)*3.51628)
-        produce_max = max(cover_rt)
-        building_max = round(max(total_rt), 2)
-        supply_max = max(abs(min(min_list)), max(max_list))
+            supply_graph_canvas.create_text(300, 15*id+5, text=model, font=('', 7), anchor='nw')
+            produced_graph_canvas.create_text(300, 15*id+5, text=model, font=('', 7), anchor='nw')
+            electric_graph_canvas.create_text(300, 15*id+5, text=model, font=('', 7), anchor='nw')
 
 
-        del min_list, max_list
-
-        for i in range(len(datetime)):
-            d = datetime[i].split(' ')
+            df_dict[model]['over_graph'] = over_graph
+            df_dict[model]['produce_graph'] = produce_graph
+            df_dict[model]['electric_graph'] = electric_graph
 
         produce_list = []
         building_list = []
@@ -671,8 +771,25 @@ def open_file():
             o = supply_graph_canvas.create_text(20, 220-i*20, text=str(round(-supply_max + supply_max/5*i, 2)), font=('', 7))
             over_supply_list.append(o)
 
+        degree_plots = [20, 220-day_of_degree[model][first_date][0]/35*175]
+        degree_plots += degree_plots
+        builidng_plots = [20, 220]
+        builidng_plots += builidng_plots
+        
+
+        building_graph = building_graph_canvas.create_line(builidng_plots, fill='gray', width=2)
+        degree_graph = degree_graph_canvas.create_line(degree_plots, fill='gray', width=2)
+        
+
+        index = 0
+        pick = model_select.get()
+        model = model_list[pick]
+        df = df_dict[model]['data']
+
+        df_list = df.to_numpy().tolist()
+
         try:
-            date_list_box.delete(0, END)
+                date_list_box.delete(0, END)
         except:
             pass
 
@@ -681,35 +798,21 @@ def open_file():
 
         date_list_box.config(yscrollcommand=scroll.set)
         scroll.config(command=custom_command)
-        index = 0
-        df_list = df.to_numpy().tolist()
-
-        over_plots = [10, 120]
-        over_plots += over_plots
-        degree_plots = [20, 220-day_of_degree[first_date][0]/35*175]
-        degree_plots += degree_plots
-        produce_plots = [20, 220]
-        produce_plots += produce_plots
-        builidng_plots = [20, 220]
-        builidng_plots += builidng_plots
-        electric_plots = [20, 220]
-        electric_plots += electric_plots
-
-        over_graph = supply_graph_canvas.create_line(over_plots, width=2)
-        produce_graph = produced_graph_canvas.create_line(produce_plots, fill='blue', width=2)
-        building_graph = building_graph_canvas.create_line(builidng_plots, fill='blue', width=2)
-        degree_graph = degree_graph_canvas.create_line(degree_plots, fill='blue', width=2)
-        electric_graph = electric_graph_canvas.create_polygon(electric_plots, fill='#03BAFD')
         set_data(df_list[max(date_list_box.nearest(0), index)])
+            
     except:
-        messagebox.showwarning("파일 불러오기 오류", "파일을 불러올 수 없습니다.")
-
+        messagebox.showwarning('Load 오류', '파일을 불러올 수 없습니다.\nsimulation 버튼을 클릭해 주세요.')
+        load_button['state'] = DISABLED
+   
 def play_file():  
-    global df 
+    global df_dict 
     global date_list_box
     global stop
     global index
-    try:          
+    try:     
+        pick = model_select.get()
+        model = model_list[pick]
+        df = df_dict[model]['data']     
         df_list = df.to_numpy().tolist()
         stop=True
         while stop:
@@ -731,6 +834,9 @@ def select_date(date_index):
 
     index = date_index[0]
     date_list_box.see(index)
+    pick = model_select.get()
+    model = model_list[pick]
+    df = df_dict[model]['data']
     select = df.loc[index].tolist()
     set_data(select)
     
@@ -772,6 +878,9 @@ def custom_command(*args):
 
     date_list_box.yview(*args)
     index = date_list_box.nearest(0)
+    pick = model_select.get()
+    model = model_list[pick]
+    df = df_dict[model]['data']
     select = df.loc[index].tolist()     
     set_data(select)
 
