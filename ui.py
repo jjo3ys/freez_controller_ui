@@ -170,11 +170,14 @@ def main():
     #model load
     model_frame = Frame(frame1)
     model_frame.pack(side='right')
-    load_button = Button(model_frame, width=7, height=1, text='LOAD', command = load_file)
-    load_button.pack()
-    Label(model_frame, height=1).pack()
     simul_button = Button(model_frame, width=10, height=1, text='SIMULATION', command = simulation)
     simul_button.pack()
+
+    Label(model_frame, height=1).pack()
+
+    load_button = Button(model_frame, width=7, height=1, text='LOAD', command = load_file)
+    load_button.pack()
+    
     if not len(os.listdir()):
         simul_button['state'] = DISABLED
 
@@ -630,7 +633,7 @@ def simulation():
 
 def load_file():
     global df, df_dict
-    global model_select, model_list
+    global model_select, model_list, radio_bt_list
     global datetime
     global index
     global day_of_over, day_of_degree, day_of_building, day_of_produce
@@ -652,6 +655,12 @@ def load_file():
         except: pass
 
         try:
+            for radioBt in radio_bt_list:
+                canvas.delete(radioBt)
+        except:
+            pass
+
+        try:
             supply_graph_canvas.delete(over_graph)
             degree_graph_canvas.delete(degree_graph)
             produced_graph_canvas.delete(produce_graph)
@@ -662,6 +671,7 @@ def load_file():
         model_list = Main.model_list
         model_select = IntVar()
         df_dict = {}
+        radio_bt_list = []
         day_of_over = {}#
         day_of_degree = {}#
         day_of_produce = {}#
@@ -669,7 +679,6 @@ def load_file():
         colors = ['blue', 'red']
         building_max, supply_max, produce_max, electric_max = 0, 0, 0, 0    
 
-        
         for id, model in enumerate(model_list):
             df_dict[model] = {}
             day_of_over[model] = {}
@@ -682,6 +691,8 @@ def load_file():
             model_button = Radiobutton(canvas, text=model, value=id, variable=model_select, command=pick_model)
             model_button.place(x=2, y=id*25+2)
             model_button.configure(background='white')
+            radio_bt_list.append(model_button)
+
             datetime = df['date'].tolist()
             total_rt = df['total_rt'].tolist()
             cover_rt = df['operation'].tolist()
