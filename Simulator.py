@@ -2,7 +2,7 @@ import pandas as pd
 import Energy_Sim_v2
 
 class Main:
-    model_list = ['THRESHOLD', 'RECORD']
+    model_list = ['THRESHOLD', 'ACTUAL']
     model_len = len(model_list)
     
     def run(self):
@@ -39,7 +39,7 @@ class Main:
                 T_return = round(return_model.predict(input_list)[0], 2)
 
                 #Operation mode
-                if OPER_MODEL == 'RECORD':
+                if OPER_MODEL == 'ACTUAL':
                     oper_list = ESim.get_oper_record(time)
                     produce_load = oper_list[:2].count(float(1))*475 + oper_list[2:4].count(float(1))*180 + oper_list[4:].count(float(1))*600
 
