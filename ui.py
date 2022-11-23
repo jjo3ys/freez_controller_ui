@@ -9,6 +9,11 @@ from tkinter import filedialog
 from tkinter import messagebox
 from PIL import ImageTk, Image
 
+wf = [3986.28, 1209.48, 848.66, 1259.43, 1531.40,
+      863.21, 1151.27, 102.52, 435.12, 935.72,
+      2013.41, 1212.51, 211.61, 481.76, 593.70]
+
+
 degree_color = {7:'000fff', 7.5:'004fff', 8:'008fff', 8.5:'00bfff', 9:'00dfff', 9.5:'00ffff', 10:'00ffdf', 10.5:'00ffbf', 11:'00ff8f', 11.5:'00ff4f', 12:'00ff0f', 12.5:'4fff00', 13:'8fff00', 13.5:'bfff00', 14:'dfff00', 14.5:'ffff00', 15:'ffbf00', 15.5:'ffdf00', 16:'ffbf00', 16.5:'ff8f00', 17:'ff4f00', 17.5:'ff0000', 18:'df0000', 19:'8f0000', 20:'4f0000'}
 
 p_x = 210
@@ -314,7 +319,7 @@ def main():
     canvas.create_rectangle(p_x+1000, p_y-95, p_x+1100, p_y+55, fill='#E0E0E0')
     canvas.create_rectangle(p_x+1000, p_y+100, p_x+1100, p_y+250, fill='#E0E0E0')
 
-    dong = ['대학본부', '정보전산원', '자연대', '도서관', '공동실험실습관', '공대', '정보대', '인문대', '복지회관', '예체대', '학생복지회관', '컨벤션', '사회대법대', '동북아경영', '교수회관']
+    dong = ['공과대학', '공동실험실습관', '교수회관', '대학본부', '도서관', '동북아경제통상', '복지회관', '사회법과대학', '예체능대학', '인문대학', '자연대학', '정보기술대학', '정보전산원', '컨벤션센터', '학생복지회관']
 
     supply_list = []
     return_list = []
@@ -326,7 +331,7 @@ def main():
             r = canvas.create_text(p_x+250+i*200, p_y-245+x*195, text='', font=('', 10), anchor='center')
             b = canvas.create_text(p_x+250+i*200, p_y-185+x*195, text='', font=('', 10), anchor='center')           
             canvas.create_text(p_x+250+i*200, p_y-215+x*195, text=dong[i+x*5], font=('', 10), anchor='center')
-            canvas.create_text(p_x+250+i*200, p_y-155+x*195, text='유량 (예정)', font=('', 10), anchor='center')
+            canvas.create_text(p_x+250+i*200, p_y-155+x*195, text=str(wf[i+x*5]+'L/m'), font=('', 10), anchor='center')
 
             supply_list.append(s)
             return_list.append(r)
@@ -422,6 +427,11 @@ def set_data(line):
     s_degree = round(float(line[4]), 2)
     date = str(line[7]).split(' ')[0]
     time = str(line[7]).split(' ')[1].split(':')
+
+    buildings_rt = line[9].split(', ')
+    buildings_supply = line[10].split(', ')
+    buildings_return = line[11].split(', ')
+
     r_color = 'orange'
     s_color = 'orange'
 
@@ -533,9 +543,9 @@ def set_data(line):
             r = return_list[i*5+j]
             b = building_rt_list[i*5+j]
 
-            canvas.itemconfig(s, text=str(s_degree)+'도')
-            canvas.itemconfig(r, text=str(r_degree)+'도')
-            canvas.itemconfig(b, text=str(total_rt)+'RT')
+            canvas.itemconfig(s, text=buildings_supply[i*5+j]+'도')
+            canvas.itemconfig(r, text=buildings_return[i*5+j]+'도')
+            canvas.itemconfig(b, text=buildings_rt[i*5+j]+'RT')
 
     canvas.itemconfig(supply_pipe, fill=s_color)
     canvas.itemconfig(return_pipe, fill=r_color)
