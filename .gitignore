@@ -1,8 +1,1 @@
-*
-!*.py
-!*.png
-!*.ico
-# !*.csv
-!*.xlsx
-!*.gitignore
-# !*.exe
+*.zip
