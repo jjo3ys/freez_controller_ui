@@ -1,5 +1,5 @@
 import pandas as pd
-import Energy_Sim_v2
+from model import Energy_Sim_v2
 
 class Main:
     model_list = ['THRESHOLD', 'ACTUAL']
@@ -79,4 +79,4 @@ class Main:
             sim_input_df.columns = ["total_rt", "produce_load", "operation", "T_return(Simul)", "T_supply(Simul)", "T_return(Real)", "T_supply(Real)", "date", "air_temp", "buildings_rt", "buildings_supply", "buildings_return"]
             sim_input_df.set_index("date", inplace=True)
 
-            sim_input_df.to_csv("./simul_result/{}_result.csv".format(OPER_MODEL))
+            sim_input_df.to_csv("./model/simul_result/{}_result.csv".format(OPER_MODEL))

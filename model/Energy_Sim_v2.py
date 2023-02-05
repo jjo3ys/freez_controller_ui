@@ -20,7 +20,7 @@ class EnergySim:
         #Param
         self.weather_file       = "./analysis_data/weather_info.csv"
         self.load_file          = "./analysis_data/new_load_table.csv"
-        self.real_temp_file     = './real_temp.csv'
+        self.real_temp_file     = './data/real_temp.csv'
         self.oper_record_file   = './analysis_data/15_min_chiller.csv'
 
 
@@ -191,7 +191,7 @@ class EnergySim:
         """
         환수온도 예측모델
         """
-        model = joblib.load('./multi_linear_regression/return_T_model.pkl')
+        model = joblib.load('./model/return_T_model.pkl')
 
         return model
 

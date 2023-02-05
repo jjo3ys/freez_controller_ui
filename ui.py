@@ -8,11 +8,10 @@ import pandas as pd
 import tkinter
 
 from tkinter import *
-from tkinter import filedialog
 from tkinter import messagebox
 from PIL import ImageTk, Image
 
-from Simulator import Main
+from model.Simulator import Main
 
 wf = [3986.28, 1209.48, 848.66, 1259.43, 1531.40,
       863.21, 1151.27, 102.52, 435.12, 935.72,
@@ -88,7 +87,7 @@ def main():
 
     root.title("Energy ui")
     root.resizable(True, True)
-    root.iconbitmap('inu.ico')
+    root.iconbitmap('./static/inu.ico')
     root.geometry('{}x{}+{}+{}'.format(int(window_x/3*2), int(window_y), 50, 50))
     # root.config(bg='#4E4E4E')
         
@@ -186,7 +185,7 @@ def main():
 
     graph_window = Toplevel(root)
     graph_window.title("Graphs")
-    graph_window.iconbitmap('inu.ico')
+    graph_window.iconbitmap('./static/inu.ico')
     graph_window.resizable(False, False)
     graph_window.geometry('820x860+{}+{}'.format(int(window_x/3*2+70), 50))
 
@@ -362,7 +361,7 @@ def main():
                 canvas.create_line(p_x+200+i*200, p_y-290+x*195+j*30, p_x+300+i*200, p_y-290+x*195+j*30)
 
     #냉동기 이미지
-    ref = Image.open('refrigerator2.png')
+    ref = Image.open('./static/refrigerator2.png')
     ref600 = ref.resize((80, 50))
     ref600 = ImageTk.PhotoImage(ref600)
     ref475 = ref.resize((72, 45))
@@ -424,7 +423,7 @@ def main():
     canvas.create_rectangle((p_x-183, p_y-170), (p_x, p_y+160), width=5)
     canvas.create_text(p_x-92, p_y-195, text='Cooling System', font=('', 15, 'bold'))
 
-    image = Image.open("green_to_red.png").resize((20, 95))
+    image = Image.open("./static/green_to_red.png").resize((20, 95))
     image = ImageTk.PhotoImage(image)
 
     canvas.create_text(110, 55, text='Temperature\nColor change', font=("", 15) , anchor='center')
@@ -494,40 +493,6 @@ def set_data(line):
         supply_graph_canvas.coords(df_dict[m]['over_graph'], over_plots)
         produced_graph_canvas.coords(df_dict[m]['produce_graph'], produce_plots)
         electric_graph_canvas.coords(df_dict[m]['electric_graph'], electric_plots)
-    
-    # try:
-    #     abs_over = abs(day_of_over[model][date][t])
-    #     if abs_over == 0:
-    #         x = 110
-    #         y = 0
-    #     elif abs_over > 0 and abs_over <=100:
-    #         x = abs(math.cos(18)*110)
-    #         y = -abs(math.sin(18)*110)
-        
-    #     elif abs_over > 100 and abs_over <=200:
-    #         x = abs(math.cos(54)*110)
-    #         y = -abs(math.sin(54)*110)
-        
-    #     elif abs_over > 200 and abs_over <=300:
-    #         x = 0
-    #         y = -110
-        
-    #     elif abs_over > 300 and abs_over <= 400:
-    #         x = -abs(math.cos(126)*110)
-    #         y = -abs(math.sin(126)*110)
-        
-    #     elif abs_over > 400 and abs_over <= 500:
-    #         x = -abs(math.cos(162)*110)
-    #         y = -abs(math.sin(162)*110)
-        
-    #     else:
-    #         x=-110
-    #         y=0
-    #     coordinate = [180, 210, 180+x, 210+y]
-
-    #     acc_graph_canvas.coords(arrow, coordinate)
-    # except:
-    #     pass
 
     if r_degree>=18:
         round_rd = round(r_degree)
@@ -593,7 +558,7 @@ def simulation():
     model = Main()
     progress_wd = Toplevel(root)
     progress_wd.title("Simulating...")
-    progress_wd.iconbitmap('inu.ico')
+    progress_wd.iconbitmap('./static/inu.ico')
     progress_wd.resizable(False, False)
     progress_wd.geometry('300x100+{}+{}'.format(int(root.winfo_width()/2), int(root.winfo_height()/2)))
     progress_wd.protocol("WM_DELETE_WINDOW", disable_event)
@@ -690,7 +655,7 @@ def load_file():
             day_of_produce[model] = {}
             day_of_building[model] = {}
 
-            df = pd.read_csv("./simul_result/{}_result.csv".format(model))
+            df = pd.read_csv("./model/simul_result/{}_result.csv".format(model))
             df_dict[model]['data']=df
             model_button = Radiobutton(canvas, text=model, value=id, variable=model_select, command=pick_model)
             model_button.place(x=2, y=id*25+2)
@@ -878,7 +843,7 @@ def get_date_list():
 
         new_window = Toplevel(root)
         new_window.title("Select date")
-        new_window.iconbitmap('inu.ico')
+        new_window.iconbitmap('./static/inu.ico')
         new_window.resizable(False, False)
         new_window.geometry('270x{}'.format(str(height)))
         text = Label(new_window, text='날짜')
