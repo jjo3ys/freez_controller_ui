@@ -12,8 +12,8 @@
 
 ## 🛠️ Stacks
 
-<img src="https://img.shields.io/badge/-python-05122A?style=flat&logo=python"/>
-<img src="https://img.shields.io/badge/-pytorch-05122A?style=flat&logo=pytorch"/>
+![](https://img.shields.io/badge/-python-05122A?style=flat&logo=python)
+![](https://img.shields.io/badge/-pytorch-05122A?style=flat&logo=pytorch)
 
 <br>
 
